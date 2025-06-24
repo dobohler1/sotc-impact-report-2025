@@ -173,13 +173,6 @@
             color: #6b7280;
         }
         
-        .error {
-            text-align: center;
-            padding: 4rem;
-            font-size: 1.1rem;
-            color: #dc2626;
-        }
-        
         .debug {
             background: #f3f4f6;
             padding: 1rem;
@@ -218,14 +211,11 @@
         <div class="header">
             <h1>Youth STEM & Sports Program Analysis</h1>
             <p>Analysis of participant demographics and interest changes in STEM and sports</p>
-            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">Data source: data/STEMIdentity.csv</p>
+            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">Data: 53 participants from STEMIdentity.csv</p>
         </div>
         
         <div id="loading" class="loading">
             Loading data...
-        </div>
-        
-        <div id="error" class="error" style="display: none;">
         </div>
         
         <div id="dashboard" style="display: none;">
@@ -313,6 +303,62 @@
     </div>
 
     <script>
+        // Embedded CSV data from STEMIdentity.csv
+        const csvData = `Student ID,Race/Ethnicity,Gender,Pre-Considering STEM,Pre-Considering Sports,Post-Considering STEM,Post Considering Sports
+JM25a01,Black or African American,Male,No,Yes,Maybe,Yes
+JM25a02,White,Female,maybe,No,Yes,No
+JM25a03,Asian,Male,yes,no,Yes,no
+JM25a04,Asian,Male,yes,no,yes,no
+JM25a05,Black or African American,Male,yes,yes,yes,yes
+JM25a06,Asian,Male,maybe,yes,maybe,yes
+JM25a07,Two or More Races,Male,maybe,maybe,Maybe,maybe
+JM25a08,Hispanic or Latino,Male,Maybe,no,yes,no
+JM25a09,Hispanic or Latino,Male,Maybe,no,Yes,no
+JM25a10,Hispanic or Latino,Male,Maybe,no,Yes,no
+JM25a11,Black or African American,Male,No,no,Maybe,no
+JM25a12,Hispanic or Latino,Male,Yes,yes,Yes,yes
+JM25a13,Asian,Male,yes,no,Yes,no
+JM25a14,Black or African American,Male,No,yes,Maybe,yes
+JM25a15,Asian,Male,No,yes,maybe,yes
+JM25a16,Two or More Races,Male,No,no,No,no
+JM25a17,Asian,Male,No,no,No,no
+JM25a18,Black or African American,Male,yes,no,yes,no
+JM25a19,Hispanic or Latino,Male,No,No,No,No
+JM25a20,Hispanic or Latino,Male,No,no,no,no
+JM25a22,Asian,Male,Maybe,no,maybe,no
+JM25a23,Two or More Races,Female,No,No,maybe,No
+BA2501,Black or African American,Male,maybe,no,yes,no
+BA2502,Asian,Male,maybe,No,yes,No
+BA2503,Black or African American,Male,yes,no,yes,no
+BA2504,Hispanic or Latino,Male,Maybe,no,Maybe,no
+BA2505,Asian,Male,No,no,maybe,no
+BA2506,Black or African American,Male,No,Yes,yes,Yes
+BA2507,Black or African American,Male,No,yes,yes,yes
+BA2508,Black or African American,Male,No,maybe,Maybe,maybe
+BA2509,Black or African American,Male,no,Yes,Yes,Yes
+BA2510,Black or African American,Male,No,Yes,no,Yes
+BA2511,Black or African American,Male,No,Yes,Maybe,Yes
+BA2512,Black or African American,Male,no,Yes,no,Yes
+BA2513,Hispanic or Latino,Male,maybe,No,maybe,No
+BA2514,Hispanic or Latino,Male,Maybe,Maybe,Maybe,Maybe
+BA2515,Black or African American,Male,No,maybe,Maybe,maybe
+BA2516,Black or African American,Male,No,Yes,yes,Yes
+BA2517,Black or African American,Male,no,yes,no,yes
+BA2518,Black or African American,Male,No,yes,Maybe,yes
+BA2519,Asian,Male,No,No,maybe,No
+BA2520,Asian,Male,No,no,maybe,no
+BA2521,Black or African American,Male,No,yes,No,yes
+JM24b04,Asian,Female,No,No,No,No
+JM24b05,Asian,Male,No,No,No,No
+JM24b06,Asian,Male,No,No,No,No
+JM24b08,Two or More Races Black or African American,Male,No,No,No,No
+JM24b11,Asian,Male,No,No,No,No
+BA24b04,Black or African American Hispanic or Latino,Male,No,Yes,Maybe,Yes
+BA24b05,Black or African American,Male,No,No,No,No
+BA24b07,White Native Hawaiian or Other Pacific Islander,Male,No,No,No,No
+BA24b11,Two or More Races Hispanic or Latino,Male,No,No,No,No
+BA24b12,Two or More Races,Male,No,No,No,No`;
+
         // Global variables to store charts
         let charts = {};
         
@@ -337,15 +383,10 @@
             }, {});
         }
         
-        // Load and process data
-        async function loadData() {
+        // Load and process embedded data
+        function loadData() {
             try {
-                // Load CSV from data folder
-                const response = await fetch('data/STEMIdentity.csv');
-                if (!response.ok) {
-                    throw new Error(`Failed to load data: ${response.status} - Make sure 'data/STEMIdentity.csv' exists in your repository`);
-                }
-                const csvText = await response.text();
+                const csvText = csvData;
                 
                 // Parse CSV
                 const parseResult = Papa.parse(csvText, {
@@ -396,7 +437,7 @@
                     else if (preSports === 'Maybe' && postSports === 'No') sportsChange = 'Decreased';
                     
                     return {
-                        id: cleanRow['ID'],
+                        id: cleanRow['Student ID'],
                         race: cleanRow['Race/Ethnicity'] || 'Not specified',
                         raceSimplified: simplifyRace(cleanRow['Race/Ethnicity']),
                         gender: cleanRow['Gender'],
@@ -409,7 +450,8 @@
                     };
                 }).filter(row => row.id && row.id.trim() !== '');
                 
-                console.log('Processed data:', processedData);
+                console.log('Processed data sample:', processedData[0]);
+                console.log('Total processed rows:', processedData.length);
                 
                 // Hide loading and show dashboard
                 document.getElementById('loading').style.display = 'none';
@@ -420,18 +462,7 @@
                 
             } catch (error) {
                 console.error('Error loading data:', error);
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('error').innerHTML = `
-                    <h2>Error Loading Data</h2>
-                    <p>${error.message}</p>
-                    <p>Make sure you have:</p>
-                    <ul style="text-align: left; display: inline-block;">
-                        <li>Created a 'data' folder in your repository</li>
-                        <li>Uploaded 'STEMIdentity.csv' to the data folder</li>
-                        <li>Waited 5-10 minutes for GitHub Pages to deploy</li>
-                    </ul>
-                `;
+                document.getElementById('loading').innerHTML = `<div class="error">Error loading data: ${error.message}</div>`;
             }
         }
         
