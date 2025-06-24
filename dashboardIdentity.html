@@ -317,7 +317,7 @@ JM25a09,Hispanic or Latino,Male,Maybe,no,Yes,no
 JM25a10,Hispanic or Latino,Male,Maybe,no,Yes,no
 JM25a11,Black or African American,Male,No,no,Maybe,no
 JM25a12,Hispanic or Latino,Male,Yes,yes,Yes,yes
-JM25a13,Asian,Male,yes,no,Yes,no
+JM25a13,Asian,Male,yes,no,Yes,maybe
 JM25a14,Black or African American,Male,No,yes,Maybe,yes
 JM25a15,Asian,Male,No,yes,maybe,yes
 JM25a16,Two or More Races,Male,No,no,No,no
@@ -326,10 +326,10 @@ JM25a18,Black or African American,Male,yes,no,yes,no
 JM25a19,Hispanic or Latino,Male,No,No,No,No
 JM25a20,Hispanic or Latino,Male,No,no,no,no
 JM25a22,Asian,Male,Maybe,no,maybe,no
-JM25a23,Two or More Races,Female,No,No,maybe,No
+JM25a23,Two or More Races,Female,No,No,maybe,maybe
 BA2501,Black or African American,Male,maybe,no,yes,no
 BA2502,Asian,Male,maybe,No,yes,No
-BA2503,Black or African American,Male,yes,no,yes,no
+BA2503,Black or African American,Male,yes,no,yes,maybe
 BA2504,Hispanic or Latino,Male,Maybe,no,Maybe,no
 BA2505,Asian,Male,No,no,maybe,no
 BA2506,Black or African American,Male,No,Yes,yes,Yes
@@ -349,7 +349,7 @@ BA2519,Asian,Male,No,No,maybe,No
 BA2520,Asian,Male,No,no,maybe,no
 BA2521,Black or African American,Male,No,yes,No,yes
 JM24b04,Asian,Female,No,No,No,No
-JM24b05,Asian,Male,No,No,No,No
+JM24b05,Asian,Male,No,maybe,No,yes
 JM24b06,Asian,Male,No,No,No,No
 JM24b08,Two or More Races Black or African American,Male,No,No,No,No
 JM24b11,Asian,Male,No,No,No,No
@@ -428,7 +428,7 @@ BA24b12,Two or More Races,Male,No,No,No,No`;
                     
                     // Calculate Sports interest change
                     const preSports = cleanRow['Pre-Considering Sports'];
-                    const postSports = cleanRow['Post Considering Sports'];
+                    const postSports = cleanRow['Post Considering Sports']; // Note: Missing hyphen in "Post"
                     let sportsChange = 'No change';
                     
                     if (preSports === 'No' && (postSports === 'Maybe' || postSports === 'Yes')) sportsChange = 'Increased';
