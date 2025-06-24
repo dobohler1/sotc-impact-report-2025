@@ -218,7 +218,7 @@
         <div class="header">
             <h1>Youth STEM & Sports Program Analysis</h1>
             <p>Analysis of participant demographics and interest changes in STEM and sports</p>
-            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">Data source: data/STEMIdentity.csv</p>
+            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">Data source: data/SOTC SLUSD Data - STEM Identity .csv</p>
         </div>
         
         <div id="loading" class="loading">
@@ -341,9 +341,9 @@
         async function loadData() {
             try {
                 // Load CSV from data folder
-                const response = await fetch('data/STEMIdentity.csv');
+                const response = await fetch('data/SOTC SLUSD Data - STEM Identity .csv');
                 if (!response.ok) {
-                    throw new Error(`Failed to load data: ${response.status} - Make sure 'data/STEMIdentity.csv' exists in your repository`);
+                    throw new Error(`Failed to load data: ${response.status} - Make sure 'data/SOTC SLUSD Data - STEM Identity .csv' exists in your repository`);
                 }
                 const csvText = await response.text();
                 
