@@ -1,0 +1,88 @@
+ID ,Cohort,Duplicates,Math Pre-Test Score (10 max),Math Post-Test Score (10 max),Math Normalized Gain (%),Computer Pre-Test Score (10 max),Computer Post-Test Score (10 max),Computer  Normalized Gain (%)
+JM25a01,John Muir Spring 25,Unique,7,8,50.0%,5,7,67%
+JM25a02,John Muir Spring 25,Unique,8,9,#N/A,7,9,#N/A
+JM25a03,John Muir Spring 25,Unique,9,10,33.3%,7,10,40%
+JM25a04,John Muir Spring 25,Unique,7,8,66.7%,5,7,50%
+JM25a05,John Muir Spring 25,Unique,7,9,50.0%,6,8,33%
+JM25a06,John Muir Spring 25,Unique,6,8,33.3%,4,6,43%
+JM25a07,John Muir Spring 25,Unique,4,6,20.0%,3,6,20%
+JM25a08,John Muir Spring 25,Unique,5,6,33.3%,5,6,60%
+JM25a09,John Muir Spring 25,Unique,7,8,50.0%,5,8,33%
+JM25a10,John Muir Spring 25,Unique,6,8,66.7%,4,6,60%
+JM25a11,John Muir Spring 25,Unique,7,9,66.7%,5,8,50%
+JM25a12,John Muir Spring 25,Unique,7,9,66.7%,6,8,60%
+JM25a13,John Muir Spring 25,Unique,7,9,16.7%,5,8,13%
+JM25a14,John Muir Spring 25,Unique,4,5,#N/A,2,3,#N/A
+JM25a15,John Muir Spring 25,Unique,NA,NA,#N/A,NA,NA,#N/A
+JM25a16,John Muir Spring 25,Unique,NA,NA,#N/A,NA,NA,#N/A
+JM25a17,John Muir Spring 25,Unique,NA,NA,50.0%,NA,NA,43%
+JM25a18,John Muir Spring 25,Unique,6,8,#N/A,3,6,#N/A
+JM25a19,John Muir Spring 25,Unique,NA,NA,#N/A,NA,NA,#N/A
+JM25a20,John Muir Spring 25,Unique,NA,NA,#N/A,NA,NA,#N/A
+JM25a22,John Muir Spring 25,Unique,NA,NA,33.3%,NA,NA,22%
+JM25a23,John Muir Spring 25,Unique,4,6,50.0%,1,3,33%
+BA2501,Bancroft Spring 25,Unique,4,7,50.0%,4,6,57%
+BA2502,Bancroft Spring 25,Unique,8,9,#N/A,3,7,#N/A
+BA2503,Bancroft Spring 25,Unique,8,10,40.0%,7,10,43%
+BA2504,Bancroft Spring 25,Unique,5,7,0.0%,3,6,0%
+BA2505,Bancroft Spring 25,Unique,5,5,60.0%,2,2,43%
+BA2506,Bancroft Spring 25,Unique,5,8,25.0%,3,6,33%
+BA2507,Bancroft Spring 25,Unique,2,4,#N/A,1,4,#N/A
+BA2508,Bancroft Spring 25,Unique,NA,NA,33.3%,NA,NA,25%
+BA2509,Bancroft Spring 25,Unique,4,6,0.0%,2,4,0%
+BA2510,Bancroft Spring 25,Unique,2,2,28.6%,1,1,13%
+BA2511,Bancroft Spring 25,Unique,3,5,0.0%,2,3,0%
+BA2512,Bancroft Spring 25,Unique,2,2,#N/A,1,1,#N/A
+BA2513,Bancroft Spring 25,Unique,NA,NA,#N/A,NA,NA,#N/A
+BA2514,Bancroft Spring 25,Unique,NA,NA,25.0%,NA,NA,17%
+BA2515,Bancroft Spring 25,Unique,6,7,40.0%,4,5,22%
+BA2516,Bancroft Spring 25,Unique,5,7,50.0%,1,3,14%
+BA2517,Bancroft Spring 25,Unique,4,7,25.0%,3,4,14%
+BA2518,Bancroft Spring 25,Unique,6,7,25.0%,3,4,17%
+BA2519,Bancroft Spring 25,Unique,6,7,20.0%,4,5,22%
+BA2520,Bancroft Spring 25,Unique,5,6,14.3%,1,3,11%
+BA2521,Bancroft Spring 25,Unique,3,4,40.0%,1,2,40%
+JM24b01,John Muir Fall 24,Unique,5,7,#N/A,5,7,#N/A
+JM24b02,John Muir Fall 24,Unique,NA,NA,50.0%,#N/A,#N/A,57%
+JM24b03,John Muir Fall 24,Unique,6,8,#N/A,3,7,#N/A
+JM24b04,John Muir Fall 24,Unique,,,#N/A,,,#N/A
+JM24b05,John Muir Fall 24,Unique,#N/A,#N/A,#N/A,#N/A,#N/A,#N/A
+JM24b06,John Muir Fall 24,Unique,#N/A,#N/A,66.7%,#N/A,#N/A,50%
+JM24b07,John Muir Fall 24,Unique,7,9,#N/A,4,7,#N/A
+JM24b08,John Muir Fall 24,Unique,NA,NA,40.0%,NA,NA,0%
+JM24b09,John Muir Fall 24,Unique,5,7,66.7%,5,5,0%
+JM24b10,John Muir Fall 24,Unique,7,9,#N/A,6,6,#N/A
+JM24b11,John Muir Fall 24,Unique,#N/A,#N/A,0.0%,#N/A,#N/A,38%
+JM24b12,John Muir Fall 24,Unique,6,6,14.3%,2,5,0%
+JM24b13,John Muir Fall 24,Unique,3,4,16.7%,3,3,38%
+JM24b14,John Muir Fall 24,Unique,4,5,0.0%,2,5,14%
+JM24b15,John Muir Fall 24,Unique,3,3,40.0%,3,4,0%
+JM24b16,John Muir Fall 24,Unique,5,7,50.0%,5,5,13%
+JM24b17,John Muir Fall 24,Unique,4,7,33.3%,2,3,43%
+JM24b18,John Muir Fall 24,Unique,7,8,25.0%,3,6,33%
+JM24b19,John Muir Fall 24,Unique,6,7,50.0%,1,4,33%
+JM24b20,John Muir Fall 24,Unique,4,7,0.0%,4,6,38%
+JM24b21,John Muir Fall 24,Unique,7,7,25.0%,2,5,0%
+JM24b22,John Muir Fall 24,Unique,6,7,40.0%,6,6,38%
+JM24b23,John Muir Fall 24,Unique,5,7,#N/A,2,5,#N/A
+JM24b24,John Muir Fall 24,Unique,NA,NA,50.0%,#N/A,#N/A,50%
+JM24b25,John Muir Fall 24,Unique,4,7,57.1%,2,6,57%
+BA24b01,Bancroft Fall 24,Unique,3,7,42.9%,3,7,33%
+BA24b02,Bancroft Fall 24,Unique,3,6,0.0%,1,4,22%
+BA24b03,Bancroft Fall 24,Unique,2,2,25.0%,1,3,22%
+BA24b04,Bancroft Fall 24,Unique,2,4,#N/A,1,3,#N/A
+BA24b05,Bancroft Fall 24,Unique,#N/A,#N/A,28.6%,#N/A,#N/A,#N/A
+BA24b06,Bancroft Fall 24,Unique,3,5,#N/A,#N/A,6,#N/A
+BA24b07,Bancroft Fall 24,Unique,#N/A,#N/A,0.0%,#N/A,#N/A,#N/A
+BA24b08,Bancroft Fall 24,Unique,8,8,0.0%,7,10,43%
+BA24b09,Bancroft Fall 24,Unique,5,5,33.3%,3,6,25%
+BA24b10,Bancroft Fall 24,Unique,4,6,#N/A,2,4,#N/A
+BA24b11,Bancroft Fall 24,Unique,#N/A,#N/A,#N/A,#N/A,#N/A,#N/A
+BA24b12,Bancroft Fall 24,Unique,#N/A,#N/A,16.7%,#N/A,#N/A,0%
+BA24b13,Bancroft Fall 24,Unique,4,5,28.6%,1,1,13%
+BA24b14,Bancroft Fall 24,Unique,3,5,33.3%,2,3,13%
+BA24b15,Bancroft Fall 24,Unique,4,6,0.0%,2,3,11%
+BA24b16,Bancroft Fall 24,Unique,5,5,50.0%,1,2,25%
+BA24b17,Bancroft Fall 24,Unique,4,7,16.7%,2,4,43%
+BA24b18,Bancroft Fall 24,,4,5,#N/A,3,6,#N/A
+BA24b19,Bancroft Fall 24,,NA,NA,#N/A,NA,NA,#N/A
