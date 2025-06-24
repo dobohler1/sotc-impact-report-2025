@@ -151,12 +151,31 @@
             font-size: 16px;
         }
         .success-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffeaa7;
+        }
+        .real-data-message {
             background: #d4edda;
             color: #155724;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
             border: 1px solid #c3e6cb;
+        }
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 10px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .search-container > div {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 </head>
@@ -175,7 +194,7 @@
         function createDashboard() {
             console.log("Creating dashboard...");
             
-            // Sample data for demonstration
+            // Sample data for demonstration (will be replaced with real data if available)
             const sampleData = [
                 { ID: "JM25a01", Cohort: "John Muir Spring 25", mathPre: 7, mathPost: 8, csPre: 5, csPost: 7, status: "Unique" },
                 { ID: "JM25a02", Cohort: "John Muir Spring 25", mathPre: 6, mathPost: 9, csPre: 4, csPost: 8, status: "Unique" },
@@ -189,17 +208,23 @@
             let currentView = 'overview';
             let searchTerm = '';
             let selectedCohort = 'all';
+            let usingRealData = false;
 
             // Calculate statistics
             function calculateStats(data) {
-                const totalStudents = data.length;
-                const mathPreAvg = data.reduce((sum, d) => sum + d.mathPre, 0) / totalStudents;
-                const mathPostAvg = data.reduce((sum, d) => sum + d.mathPost, 0) / totalStudents;
-                const csPreAvg = data.reduce((sum, d) => sum + d.csPre, 0) / totalStudents;
-                const csPostAvg = data.reduce((sum, d) => sum + d.csPost, 0) / totalStudents;
+                if (!data || data.length === 0) return { totalStudents: 0, mathImprovement: '0', csImprovement: '0', mathPreAvg: '0', mathPostAvg: '0', csPreAvg: '0', csPostAvg: '0' };
                 
-                const mathImprovement = ((mathPostAvg - mathPreAvg) / mathPreAvg * 100).toFixed(1);
-                const csImprovement = ((csPostAvg - csPreAvg) / csPreAvg * 100).toFixed(1);
+                const validMathData = data.filter(d => d.mathPre !== null && d.mathPost !== null && !isNaN(d.mathPre) && !isNaN(d.mathPost));
+                const validCSData = data.filter(d => d.csPre !== null && d.csPost !== null && !isNaN(d.csPre) && !isNaN(d.csPost));
+                
+                const totalStudents = data.length;
+                const mathPreAvg = validMathData.length > 0 ? validMathData.reduce((sum, d) => sum + Number(d.mathPre), 0) / validMathData.length : 0;
+                const mathPostAvg = validMathData.length > 0 ? validMathData.reduce((sum, d) => sum + Number(d.mathPost), 0) / validMathData.length : 0;
+                const csPreAvg = validCSData.length > 0 ? validCSData.reduce((sum, d) => sum + Number(d.csPre), 0) / validCSData.length : 0;
+                const csPostAvg = validCSData.length > 0 ? validCSData.reduce((sum, d) => sum + Number(d.csPost), 0) / validCSData.length : 0;
+                
+                const mathImprovement = mathPreAvg > 0 ? ((mathPostAvg - mathPreAvg) / mathPreAvg * 100).toFixed(1) : '0';
+                const csImprovement = csPreAvg > 0 ? ((csPostAvg - csPreAvg) / csPreAvg * 100).toFixed(1) : '0';
 
                 return {
                     totalStudents,
@@ -208,7 +233,9 @@
                     mathPreAvg: mathPreAvg.toFixed(1),
                     mathPostAvg: mathPostAvg.toFixed(1),
                     csPreAvg: csPreAvg.toFixed(1),
-                    csPostAvg: csPostAvg.toFixed(1)
+                    csPostAvg: csPostAvg.toFixed(1),
+                    validMathCount: validMathData.length,
+                    validCSCount: validCSData.length
                 };
             }
 
@@ -232,8 +259,11 @@
                 const cohortStats = getCohortStats(currentData);
                 
                 return `
-                    <div class="success-message">
-                        ✅ Dashboard loaded successfully! This is showing sample data. Upload your CSV file to see real results.
+                    <div class="${usingRealData ? 'real-data-message' : 'success-message'}">
+                        ${usingRealData ? 
+                            `✅ Real data loaded successfully! Showing ${currentData.length} student records from your STEM program.` :
+                            `⚠️ Dashboard loaded with sample data. Upload your CSV file to the 'data' folder to see real results.`
+                        }
                     </div>
                     
                     <h1 class="section-title">STEM Program Analysis Dashboard</h1>
@@ -259,8 +289,8 @@
                         </div>
                         <div class="stat-card" style="border-left-color: #f39c12;">
                             <div class="stat-title">Data Completeness</div>
-                            <div class="stat-number" style="color: #f39c12;">100%</div>
-                            <div class="stat-subtitle">All scores available</div>
+                            <div class="stat-number" style="color: #f39c12;">${Math.round((stats.validMathCount + stats.validCSCount) / (stats.totalStudents * 2) * 100)}%</div>
+                            <div class="stat-subtitle">${stats.validMathCount + stats.validCSCount}/${stats.totalStudents * 2} scores</div>
                         </div>
                     </div>
 
@@ -292,11 +322,13 @@
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left;">
                                     <div>
                                         <p><strong>Students:</strong> ${cohort.totalStudents}</p>
+                                        <p><strong>Valid Math Data:</strong> ${cohort.validMathCount}/${cohort.totalStudents}</p>
                                         <p><strong>Math Pre-avg:</strong> ${cohort.mathPreAvg}</p>
                                         <p><strong>Math Post-avg:</strong> ${cohort.mathPostAvg}</p>
                                         <p><strong>Math Improvement:</strong> <span style="color: #27ae60; font-weight: bold;">${cohort.mathImprovement}%</span></p>
                                     </div>
                                     <div>
+                                        <p><strong>Valid CS Data:</strong> ${cohort.validCSCount}/${cohort.totalStudents}</p>
                                         <p><strong>CS Pre-avg:</strong> ${cohort.csPreAvg}</p>
                                         <p><strong>CS Post-avg:</strong> ${cohort.csPostAvg}</p>
                                         <p><strong>CS Improvement:</strong> <span style="color: #8e44ad; font-weight: bold;">${cohort.csImprovement}%</span></p>
@@ -352,31 +384,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${filteredData.map(student => `
+                            ${filteredData.map(student => {
+                                const mathGain = (student.mathPre && student.mathPost) ? 
+                                    (((student.mathPost - student.mathPre) / student.mathPre) * 100).toFixed(1) : 'N/A';
+                                const csGain = (student.csPre && student.csPost) ? 
+                                    (((student.csPost - student.csPre) / student.csPre) * 100).toFixed(1) : 'N/A';
+                                
+                                return `
                                 <tr>
                                     <td><strong>${student.ID}</strong></td>
                                     <td style="font-size: 0.9em;">${student.Cohort}</td>
                                     <td>
-                                        <span style="color: #e74c3c;">${student.mathPre}</span> → 
-                                        <span style="color: #27ae60;">${student.mathPost}</span>
+                                        <span style="color: #e74c3c;">${student.mathPre || 'N/A'}</span> → 
+                                        <span style="color: #27ae60;">${student.mathPost || 'N/A'}</span>
                                         <small style="display: block; color: #7f8c8d;">
-                                            Gain: ${(((student.mathPost - student.mathPre) / student.mathPre) * 100).toFixed(1)}%
+                                            Gain: ${mathGain}%
                                         </small>
                                     </td>
                                     <td>
-                                        <span style="color: #e74c3c;">${student.csPre}</span> → 
-                                        <span style="color: #27ae60;">${student.csPost}</span>
+                                        <span style="color: #e74c3c;">${student.csPre || 'N/A'}</span> → 
+                                        <span style="color: #27ae60;">${student.csPost || 'N/A'}</span>
                                         <small style="display: block; color: #7f8c8d;">
-                                            Gain: ${(((student.csPost - student.csPre) / student.csPre) * 100).toFixed(1)}%
+                                            Gain: ${csGain}%
                                         </small>
                                     </td>
                                     <td>
-                                        <span style="background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">
+                                        <span style="background: ${student.status === 'Unique' ? '#d4edda' : '#fff3cd'}; color: ${student.status === 'Unique' ? '#155724' : '#856404'}; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">
                                             ${student.status}
                                         </span>
                                     </td>
                                 </tr>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </tbody>
                     </table>
                 `;
@@ -430,29 +469,92 @@
             };
 
             // Try to load real data
-            tryLoadRealData();
-
             function tryLoadRealData() {
                 const possiblePaths = [
+                    './data/SOTC SLUSD Data - Academic Performance.csv',
+                    'data/SOTC SLUSD Data - Academic Performance.csv',
                     './data/SOTC SLUSD Data  Academic Performance.csv',
-                    'data/SOTC SLUSD Data  Academic Performance.csv'
+                    'data/SOTC SLUSD Data  Academic Performance.csv',
+                    './SOTC SLUSD Data  Academic Performance.csv'
                 ];
 
                 Promise.all(possiblePaths.map(path => 
-                    fetch(path).then(response => response.ok ? response.text() : null).catch(() => null)
+                    fetch(path)
+                        .then(response => response.ok ? response.text() : null)
+                        .catch(() => null)
                 )).then(results => {
                     const csvContent = results.find(result => result !== null);
                     if (csvContent) {
-                        console.log("Real data loaded successfully!");
-                        // Here you would parse the CSV and update currentData
-                        // For now, we'll stick with sample data
+                        console.log("Real CSV data loaded successfully!");
+                        
+                        // Parse CSV manually (simple parser)
+                        const lines = csvContent.trim().split('\n');
+                        const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                        
+                        console.log("CSV Headers:", headers);
+                        
+                        const parsedData = [];
+                        for (let i = 1; i < lines.length; i++) {
+                            const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                            if (values.length >= headers.length && values[0]) { // Skip empty rows
+                                const row = {};
+                                headers.forEach((header, index) => {
+                                    row[header] = values[index] || null;
+                                });
+                                parsedData.push(row);
+                            }
+                        }
+                        
+                        console.log(`Parsed ${parsedData.length} rows of data`);
+                        
+                        // Convert to our dashboard format
+                        currentData = parsedData.map(row => {
+                            // Clean up percentage values
+                            const cleanPercent = (val) => {
+                                if (!val || val === '#N/A' || val === 'NA') return null;
+                                if (typeof val === 'string' && val.includes('%')) {
+                                    return parseFloat(val.replace('%', ''));
+                                }
+                                return val;
+                            };
+                            
+                            const cleanNumber = (val) => {
+                                if (!val || val === '#N/A' || val === 'NA') return null;
+                                const num = parseFloat(val);
+                                return isNaN(num) ? null : num;
+                            };
+                            
+                            return {
+                                ID: row['ID'] || row['id'] || 'Unknown',
+                                Cohort: row['Cohort'] || 'Unknown',
+                                mathPre: cleanNumber(row['Math Pre-Test Score (10 max)']),
+                                mathPost: cleanNumber(row['Math Post-Test Score (10 max)']),
+                                csPre: cleanNumber(row['Computer Pre-Test Score (10 max)']),
+                                csPost: cleanNumber(row['Computer Post-Test Score (10 max)']),
+                                mathGain: cleanPercent(row['Math Normalized Gain (%)']),
+                                csGain: cleanPercent(row['Computer  Normalized Gain (%)']),
+                                status: row['Duplicates'] || 'Unknown'
+                            };
+                        }).filter(row => row.ID && row.ID !== 'Unknown'); // Remove invalid rows
+                        
+                        console.log(`Successfully processed ${currentData.length} student records`);
+                        console.log("Sample processed data:", currentData[0]);
+                        
+                        usingRealData = true;
+                    } else {
+                        console.log("CSV file not found, using sample data");
+                        usingRealData = false;
                     }
                     render();
-                }).catch(() => {
-                    console.log("Using sample data");
+                }).catch(error => {
+                    console.error("Error loading data:", error);
+                    usingRealData = false;
                     render();
                 });
             }
+
+            // Start loading data
+            tryLoadRealData();
         }
 
         // Start the dashboard
