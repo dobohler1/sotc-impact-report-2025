@@ -72,24 +72,6 @@
         .grid-2 {
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
         }
-        .tier-breakdown {
-            background: #fafbfc;
-            border-radius: 6px;
-            padding: 10px;
-            margin-top: 10px;
-        }
-        .tier-segment {
-            transition: all 0.3s ease;
-        }
-        .tier-segment:hover {
-            opacity: 0.8;
-            transform: translateY(-1px);
-        }
-        .attendance-bar {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
         .card {
             background: white;
             padding: 24px;
@@ -290,16 +272,27 @@
         .table td {
             font-size: 0.9rem;
         }
+        .tier-breakdown {
+            background: #fafbfc;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .tier-segment {
+            transition: all 0.3s ease;
+        }
+        .tier-segment:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+        .attendance-bar {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
         @media (max-width: 768px) {
             .dashboard {
                 padding: 10px;
-            }
-
-            // Get color intensity based on score (for skills matrix)
-            function getColorIntensity(score, type = 'stem') {
-                const intensity = Math.min(Math.max(score / 4, 0.2), 1);
-                const baseColor = type === 'stem' ? '59, 130, 246' : '16, 185, 129';
-                return `rgba(${baseColor}, ${intensity})`;
             }
             .title {
                 font-size: 2rem;
@@ -315,6 +308,12 @@
             }
             .matrix-row {
                 grid-template-columns: 100px repeat(8, 1fr) 60px 80px;
+            }
+            .tier-breakdown {
+                font-size: 0.8rem;
+            }
+            .card-title {
+                font-size: 1rem;
             }
         }
     </style>
@@ -355,6 +354,8 @@
                 'John Muir Spring 25': '#3B82F6'    // Blue (newest)
             };
 
+            // ========== UTILITY FUNCTIONS (DEFINED FIRST) ==========
+            
             // Process data
             function processData(rawData) {
                 return rawData.map(d => {
@@ -498,6 +499,13 @@
                 return colors[tierIndex] || '#6b7280';
             }
 
+            // Get color intensity based on score (for skills matrix)
+            function getColorIntensity(score, type = 'stem') {
+                const intensity = Math.min(Math.max(score / 4, 0.2), 1);
+                const baseColor = type === 'stem' ? '59, 130, 246' : '16, 185, 129';
+                return `rgba(${baseColor}, ${intensity})`;
+            }
+
             // Get engagement stats for cohort
             function getEngagementStats(cohortName) {
                 const cohortData = processData(currentData).filter(d => d.cohort === cohortName);
@@ -519,7 +527,8 @@
                 };
             }
 
-            // Render dashboard
+            // ========== RENDER FUNCTION ==========
+            
             function render() {
                 const processedData = processData(currentData);
                 const cohortStats = calculateCohortStats(processedData);
@@ -540,7 +549,7 @@
 
                         <div class="header">
                             <h1 class="title">STEM vs Sports Engagement Analysis</h1>
-                            <p class="subtitle">Comprehensive analysis of student engagement patterns across activities</p>
+                            <p class="subtitle">Comprehensive analysis of student engagement patterns and attendance</p>
                         </div>
 
                         <div class="filter-container">
@@ -744,63 +753,31 @@
                             <h3 class="card-title">Key Engagement Insights</h3>
                             <div class="insights-grid">
                                 <div class="insight-card">
-                                    <div class="insight-title">🏆 Strongest STEM Progression</div>
+                                    <div class="insight-title">🏆 Attendance & STEM Correlation</div>
                                     <div class="insight-text">
-                                        Comparing Fall 24 to Spring 25, <strong>John Muir shows significant STEM improvement</strong>, 
-                                        while <strong>Bancroft maintains consistent sports-focused engagement</strong> across time periods.
+                                        <strong>John Muir Spring 25</strong> shows both highest STEM engagement and strong Tier 5 attendance (52%), 
+                                        suggesting a positive correlation between attendance and STEM performance.
                                     </div>
                                 </div>
                                 <div class="insight-card">
-                                    <div class="insight-title">🎯 Confidence Development</div>
+                                    <div class="insight-title">🎯 Balanced Engagement Patterns</div>
                                     <div class="insight-text">
-                                        Skills matrix reveals that <strong>confidence scores consistently lag behind participation</strong> 
-                                        across all cohorts, suggesting targeted confidence-building could boost overall engagement.
+                                        <strong>Bancroft Spring 25</strong> demonstrates balanced participation with concentrated Tier 4 attendance (65%), 
+                                        indicating consistent moderate engagement across both STEM and sports.
                                     </div>
                                 </div>
                                 <div class="insight-card">
-                                    <div class="insight-title">📊 Archetype Patterns</div>
+                                    <div class="insight-title">📊 Retention Evolution</div>
                                     <div class="insight-text">
-                                        <strong>John Muir cohorts</strong> have more STEM Champions and Specialists, 
-                                        while <strong>Bancroft cohorts</strong> show Sports Champions and Sports Leaning patterns.
+                                        Comparing Fall to Spring cohorts shows <strong>improved attendance consistency</strong>, 
+                                        with Spring cohorts having fewer Tier 1 (low attendance) students.
                                     </div>
                                 </div>
                                 <div class="insight-card">
-                                    <div class="insight-title">📈 Program Evolution</div>
+                                    <div class="insight-title">📈 Program Optimization</div>
                                     <div class="insight-text">
-                                        Chronological analysis shows <strong>program refinement over time</strong>, with newer cohorts 
-                                        displaying more balanced engagement patterns and higher overall participation.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Archetype Legend -->
-                        <div class="card">
-                            <h3 class="card-title">Student Archetype Definitions</h3>
-                            <div class="insights-grid">
-                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-                                    <div style="font-weight: 600; margin-bottom: 10px;">High Performance Types</div>
-                                    <div style="font-size: 0.9rem; line-height: 1.4;">
-                                        <strong>High Balanced:</strong> Strong in both areas (3.5+ avg, &lt;0.5 gap)<br>
-                                        <strong>STEM Champion:</strong> High overall with STEM dominance<br>
-                                        <strong>Sports Champion:</strong> High overall with sports dominance
-                                    </div>
-                                </div>
-                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-                                    <div style="font-weight: 600; margin-bottom: 10px;">Specialist Types</div>
-                                    <div style="font-size: 0.9rem; line-height: 1.4;">
-                                        <strong>STEM Specialist:</strong> Strong STEM, weak sports<br>
-                                        <strong>Sports Specialist:</strong> Strong sports, weak STEM<br>
-                                        <strong>STEM Leaning:</strong> Moderate with STEM preference<br>
-                                        <strong>Sports Leaning:</strong> Moderate with sports preference
-                                    </div>
-                                </div>
-                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-                                    <div style="font-weight: 600; margin-bottom: 10px;">Developing Types</div>
-                                    <div style="font-size: 0.9rem; line-height: 1.4;">
-                                        <strong>Balanced Active:</strong> Moderate but well-balanced<br>
-                                        <strong>Needs Confidence:</strong> Low confidence in one/both areas<br>
-                                        <strong>Developing:</strong> Still building skills in both areas
+                                        <strong>John Muir Fall 24</strong> had excellent Tier 5 retention (64%) but lower total attendance, 
+                                        suggesting strategies from Spring 25 could improve overall participation.
                                     </div>
                                 </div>
                             </div>
@@ -809,12 +786,16 @@
                 `;
             }
 
+            // ========== EVENT HANDLERS ==========
+            
             // Global event handlers
             window.handleCohortChange = function(cohort) {
                 selectedCohort = cohort;
                 render();
             };
 
+            // ========== DATA LOADING ==========
+            
             // Try to load real data
             function tryLoadRealData() {
                 const possiblePaths = [
@@ -878,6 +859,8 @@
             tryLoadRealData();
         }
 
+        // ========== INITIALIZATION ==========
+        
         // Start the dashboard
         try {
             console.log("Initializing engagement dashboard...");
