@@ -1,572 +1,750 @@
-import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ComposedChart } from 'recharts';
-import Papa from 'papaparse';
-import _ from 'lodash';
-
-const EngagementDashboard = () => {
-  const [data, setData] = useState([]);
-  const [cohortStats, setCohortStats] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedCohort, setSelectedCohort] = useState('all');
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const fileContent = await window.fs.readFile('SOTC SLUSD Data  AfterSchoolEngagement.csv', { encoding: 'utf8' });
-        
-        // Parse CSV manually due to formatting
-        const lines = fileContent.split('\n').filter(line => line.trim());
-        const dataLines = lines.slice(1).filter(line => 
-          line.includes('John Muir') || line.includes('Bancroft')
-        );
-
-        const parsedRecords = dataLines.map(line => {
-          const parts = line.split(',');
-          if (parts.length >= 10) {
-            return {
-              ID: parts[0].trim(),
-              Cohort: parts[1].trim(),
-              STEM_Participation: parseFloat(parts[2]) || 0,
-              STEM_Teamwork: parseFloat(parts[3]) || 0,
-              STEM_TaskCompletion: parseFloat(parts[4]) || 0,
-              STEM_Confidence: parseFloat(parts[5]) || 0,
-              Sports_Participation: parseFloat(parts[6]) || 0,
-              Sports_Teamwork: parseFloat(parts[7]) || 0,
-              Sports_TaskCompletion: parseFloat(parts[8]) || 0,
-              Sports_Confidence: parseFloat(parts[9]) || 0
-            };
-          }
-          return null;
-        }).filter(record => record !== null);
-
-        // Clean and process the data
-        const cleanedData = parsedRecords.map(d => {
-          // Map cohort names and create short codes for chronological order
-          let cohortCode = '';
-          let cohortDisplay = '';
-          if (d.Cohort === 'John Muir Fall 24') {
-            cohortCode = 'JM_F24';
-            cohortDisplay = 'John Muir Fall 24';
-          } else if (d.Cohort === 'Bancroft Fall 24') {
-            cohortCode = 'BA_F24';
-            cohortDisplay = 'Bancroft Fall 24';
-          } else if (d.Cohort === 'Bancroft Spring 25') {
-            cohortCode = 'BA_S25';
-            cohortDisplay = 'Bancroft Spring 25';
-          } else if (d.Cohort === 'John Muir Spring 25') {
-            cohortCode = 'JM_S25';
-            cohortDisplay = 'John Muir Spring 25';
-          }
-          
-          const stemAvg = (d.STEM_Participation + d.STEM_Teamwork + d.STEM_TaskCompletion + d.STEM_Confidence) / 4;
-          const sportsAvg = (d.Sports_Participation + d.Sports_Teamwork + d.Sports_TaskCompletion + d.Sports_Confidence) / 4;
-          
-          return {
-            id: d.ID,
-            cohort: cohortCode,
-            cohortDisplay: cohortDisplay,
-            stemParticipation: d.STEM_Participation,
-            stemTeamwork: d.STEM_Teamwork,
-            stemTaskCompletion: d.STEM_TaskCompletion,
-            stemConfidence: d.STEM_Confidence,
-            sportsParticipation: d.Sports_Participation,
-            sportsTeamwork: d.Sports_Teamwork,
-            sportsTaskCompletion: d.Sports_TaskCompletion,
-            sportsConfidence: d.Sports_Confidence,
-            stemAverage: stemAvg,
-            sportsAverage: sportsAvg,
-            overallEngagement: (stemAvg + sportsAvg) / 2,
-            stemDominant: stemAvg > sportsAvg,
-            engagementGap: Math.abs(stemAvg - sportsAvg)
-          };
-        }).filter(d => d.cohort && (d.stemAverage > 0 || d.sportsAverage > 0)); // Filter out non-participants
-
-        // Calculate cohort statistics (chronological order)
-        const cohortOrder = ['JM_F24', 'BA_F24', 'BA_S25', 'JM_S25'];
-        const cohortSummary = _.groupBy(cleanedData, 'cohort');
-        const stats = cohortOrder.map(cohortCode => {
-          const students = cohortSummary[cohortCode] || [];
-          const cohortDisplay = students[0]?.cohortDisplay || cohortCode;
-          
-          return {
-            cohort: cohortCode,
-            cohortDisplay: cohortDisplay,
-            size: students.length,
-            avgStemOverall: students.length > 0 ? _.mean(students.map(s => s.stemAverage)) : 0,
-            avgSportsOverall: students.length > 0 ? _.mean(students.map(s => s.sportsAverage)) : 0,
-            avgOverallEngagement: students.length > 0 ? _.mean(students.map(s => s.overallEngagement)) : 0,
-            stemDominantCount: students.filter(s => s.stemDominant).length,
-            sportsDominantCount: students.filter(s => !s.stemDominant).length,
-            avgStemParticipation: students.length > 0 ? _.mean(students.map(s => s.stemParticipation)) : 0,
-            avgStemTeamwork: students.length > 0 ? _.mean(students.map(s => s.stemTeamwork)) : 0,
-            avgStemTaskCompletion: students.length > 0 ? _.mean(students.map(s => s.stemTaskCompletion)) : 0,
-            avgStemConfidence: students.length > 0 ? _.mean(students.map(s => s.stemConfidence)) : 0,
-            avgSportsParticipation: students.length > 0 ? _.mean(students.map(s => s.sportsParticipation)) : 0,
-            avgSportsTeamwork: students.length > 0 ? _.mean(students.map(s => s.sportsTeamwork)) : 0,
-            avgSportsTaskCompletion: students.length > 0 ? _.mean(students.map(s => s.sportsTaskCompletion)) : 0,
-            avgSportsConfidence: students.length > 0 ? _.mean(students.map(s => s.sportsConfidence)) : 0,
-            balancedStudents: students.filter(s => s.engagementGap <= 0.5).length
-          };
-        }).filter(stat => stat.size > 0);
-
-        setData(cleanedData);
-        setCohortStats(stats);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error loading data:', error);
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  if (loading || !data.length || !cohortStats.length) {
-    return <div className="p-8 text-center">Loading engagement data...</div>;
-  }
-
-  // Color schemes (chronological order)
-  const cohortColors = {
-    'JM_F24': '#EF4444', // Red for oldest
-    'BA_F24': '#F59E0B', // Orange
-    'BA_S25': '#10B981', // Green
-    'JM_S25': '#3B82F6'  // Blue for newest
-  };
-
-  // Prepare comparison data
-  const comparisonData = cohortStats.map(stat => ({
-    cohort: stat.cohortDisplay,
-    'STEM': Number(stat.avgStemOverall?.toFixed(2)) || 0,
-    'Sports': Number(stat.avgSportsOverall?.toFixed(2)) || 0
-  }));
-
-  // Prepare detailed metrics data
-  const detailedMetrics = cohortStats.map(stat => ({
-    cohort: stat.cohortDisplay,
-    'STEM Participation': Number(stat.avgStemParticipation?.toFixed(2)) || 0,
-    'STEM Teamwork': Number(stat.avgStemTeamwork?.toFixed(2)) || 0,
-    'STEM Task Completion': Number(stat.avgStemTaskCompletion?.toFixed(2)) || 0,
-    'STEM Confidence': Number(stat.avgStemConfidence?.toFixed(2)) || 0,
-    'Sports Participation': Number(stat.avgSportsParticipation?.toFixed(2)) || 0,
-    'Sports Teamwork': Number(stat.avgSportsTeamwork?.toFixed(2)) || 0,
-    'Sports Task Completion': Number(stat.avgSportsTaskCompletion?.toFixed(2)) || 0,
-    'Sports Confidence': Number(stat.avgSportsConfidence?.toFixed(2)) || 0
-  }));
-
-  // Filter data based on selected cohort
-  const filteredData = selectedCohort === 'all' ? data : data.filter(d => d.cohort === selectedCohort);
-
-  // Student archetype classification (same as before)
-  const getStudentArchetype = (student) => {
-    const stemAvg = student.stemAverage || 0;
-    const sportsAvg = student.sportsAverage || 0;
-    const gap = Math.abs(stemAvg - sportsAvg);
-    const overall = (stemAvg + sportsAvg) / 2;
-    
-    if (overall >= 3.5 && gap <= 0.5) return "High Balanced";
-    if (overall >= 3.5 && stemAvg > sportsAvg) return "STEM Champion";
-    if (overall >= 3.5 && sportsAvg > stemAvg) return "Sports Champion";
-    if (gap <= 0.5 && overall >= 2.5) return "Balanced Active";
-    if (stemAvg >= 3.5 && sportsAvg <= 2) return "STEM Specialist";
-    if (sportsAvg >= 3.5 && stemAvg <= 2) return "Sports Specialist";
-    if (overall >= 2.5 && stemAvg > sportsAvg) return "STEM Leaning";
-    if (overall >= 2.5 && sportsAvg > stemAvg) return "Sports Leaning";
-    if (student.stemConfidence <= 2 || student.sportsConfidence <= 2) return "Needs Confidence";
-    return "Developing";
-  };
-
-  // Prepare archetype data by cohort (show archetypal makeup of each cohort)
-  const archetypesByCohort = cohortStats.map(cohortStat => {
-    const cohortStudents = data.filter(s => s.cohort === cohortStat.cohort);
-    const archetypeCount = {};
-    
-    cohortStudents.forEach(student => {
-      const archetype = getStudentArchetype(student);
-      archetypeCount[archetype] = (archetypeCount[archetype] || 0) + 1;
-    });
-
-    return {
-      cohort: cohortStat.cohortDisplay,
-      cohortCode: cohortStat.cohort,
-      totalStudents: cohortStudents.length,
-      archetypes: archetypeCount
-    };
-  });
-
-  // Create data for stacked bar chart showing archetype distribution by cohort
-  const allArchetypes = [
-    "High Balanced", "STEM Champion", "Sports Champion", "Balanced Active",
-    "STEM Specialist", "Sports Specialist", "STEM Leaning", "Sports Leaning",
-    "Needs Confidence", "Developing"
-  ];
-
-  const archetypeChartData = archetypesByCohort.map(cohort => {
-    const data = { cohort: cohort.cohort };
-    allArchetypes.forEach(archetype => {
-      data[archetype] = cohort.archetypes[archetype] || 0;
-    });
-    return data;
-  });
-
-  // Calculate engagement level distribution
-  const getEngagementLevel = (score) => {
-    const numScore = Number(score) || 0;
-    if (numScore >= 3.5) return 'High';
-    if (numScore >= 2.5) return 'Active';
-    if (numScore >= 1.5) return 'Moderate';
-    return 'Low';
-  };
-
-  const engagementDistribution = cohortStats.map(stat => {
-    const students = data.filter(s => s.cohort === stat.cohort);
-    return {
-      cohort: stat.cohort,
-      'High STEM': students.filter(s => getEngagementLevel(s.stemAverage) === 'High').length,
-      'Active STEM': students.filter(s => getEngagementLevel(s.stemAverage) === 'Active').length,
-      'Moderate STEM': students.filter(s => getEngagementLevel(s.stemAverage) === 'Moderate').length,
-      'Low STEM': students.filter(s => getEngagementLevel(s.stemAverage) === 'Low').length,
-      'High Sports': students.filter(s => getEngagementLevel(s.sportsAverage) === 'High').length,
-      'Active Sports': students.filter(s => getEngagementLevel(s.sportsAverage) === 'Active').length,
-      'Moderate Sports': students.filter(s => getEngagementLevel(s.sportsAverage) === 'Moderate').length,
-      'Low Sports': students.filter(s => getEngagementLevel(s.sportsAverage) === 'Low').length
-    };
-  });
-
-  return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">STEM vs Sports Engagement Analysis</h1>
-          <p className="text-lg text-gray-600">Comprehensive analysis of student engagement patterns across activities</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEM vs Sports Engagement Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f8fafc;
+        }
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .filter-select {
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        }
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .cohort-card {
+            border-left: 4px solid;
+            position: relative;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+        .stat-label {
+            color: #7f8c8d;
+        }
+        .stat-value {
+            font-weight: 600;
+        }
+        .stem-value { color: #3b82f6; }
+        .sports-value { color: #10b981; }
+        .chart-container {
+            height: 300px;
+            margin-top: 15px;
+        }
+        .bar-chart {
+            display: flex;
+            align-items: end;
+            height: 200px;
+            gap: 10px;
+            padding: 20px 0;
+        }
+        .bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .bar-pair {
+            display: flex;
+            gap: 3px;
+            align-items: end;
+            height: 150px;
+        }
+        .bar {
+            width: 20px;
+            border-radius: 3px 3px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .bar:hover {
+            opacity: 0.8;
+        }
+        .stem-bar { background: #3b82f6; }
+        .sports-bar { background: #10b981; }
+        .bar-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            text-align: center;
+            transform: rotate(-45deg);
+            transform-origin: center;
+            margin-top: 10px;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        .skills-matrix {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .matrix-header {
+            display: grid;
+            grid-template-columns: 120px repeat(8, 1fr) 80px 100px;
+            gap: 2px;
+            margin-bottom: 5px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 120px repeat(8, 1fr) 80px 100px;
+            gap: 2px;
+            margin-bottom: 2px;
+            font-size: 0.75rem;
+        }
+        .matrix-cell {
+            padding: 6px 4px;
+            text-align: center;
+            border-radius: 3px;
+            color: white;
+            font-weight: 500;
+        }
+        .matrix-header-cell {
+            padding: 6px 4px;
+            text-align: center;
+            border-radius: 3px;
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+        }
+        .id-cell {
+            background: #f8fafc;
+            color: #374151;
+            font-weight: 600;
+            text-align: left;
+            padding-left: 8px;
+        }
+        .archetype-cell {
+            background: #f3f4f6;
+            color: #374151;
+            font-size: 0.7rem;
+        }
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .insight-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .insight-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .insight-text {
+            color: #4b5563;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        .warning-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffeaa7;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        .table td {
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 10px;
+            }
+            .title {
+                font-size: 2rem;
+            }
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .matrix-header {
+                grid-template-columns: 100px repeat(8, 1fr) 60px 80px;
+            }
+            .matrix-row {
+                grid-template-columns: 100px repeat(8, 1fr) 60px 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="dashboard-root">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading Engagement Analysis...</p>
         </div>
-
-        {/* Filter Controls */}
-        <div className="mb-6 flex justify-center">
-          <select
-            value={selectedCohort}
-            onChange={(e) => setSelectedCohort(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg bg-white shadow-sm"
-          >
-            <option value="all">All Cohorts</option>
-            {cohortStats.map(stat => (
-              <option key={stat.cohort} value={stat.cohort}>{stat.cohortDisplay}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          {cohortStats.map(stat => (
-            <div key={stat.cohort} className="bg-white rounded-lg p-6 shadow-lg border-l-4" 
-                 style={{borderLeftColor: cohortColors[stat.cohort]}}>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{stat.cohortDisplay}</h3>
-              <p className="text-sm text-gray-600 mb-3">{stat.size} students</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">STEM Avg:</span>
-                  <span className="font-medium text-blue-600">{(stat.avgStemOverall || 0).toFixed(2)}/4</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Sports Avg:</span>
-                  <span className="font-medium text-green-600">{(stat.avgSportsOverall || 0).toFixed(2)}/4</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">STEM Focused:</span>
-                  <span className="font-medium">{stat.stemDominantCount || 0} students</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Sports Focused:</span>
-                  <span className="font-medium">{stat.sportsDominantCount || 0} students</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          
-          {/* STEM vs Sports Comparison */}
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">STEM vs Sports Engagement by Cohort</h3>
-            <div className="mb-3 text-sm text-gray-600">Chronological order: Fall 24 → Spring 25</div>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={comparisonData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="cohort" angle={-45} textAnchor="end" height={80} />
-                <YAxis domain={[0, 4]} />
-                <Tooltip formatter={(value, name) => [value.toFixed(2), `${name} Engagement`]} />
-                <Legend />
-                <Bar dataKey="STEM" fill="#3B82F6" />
-                <Bar dataKey="Sports" fill="#10B981" />
-              </BarChart>
-            </ResponsiveContainer>
-            
-            {/* Archetype Descriptions */}
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-              <div className="space-y-1">
-                <div><strong>High Balanced:</strong> Strong in both areas (3.5+ avg, &lt;0.5 gap)</div>
-                <div><strong>STEM Champion:</strong> High overall with STEM dominance</div>
-                <div><strong>Sports Champion:</strong> High overall with sports dominance</div>
-                <div><strong>STEM Specialist:</strong> Strong STEM, weak sports</div>
-                <div><strong>Sports Specialist:</strong> Strong sports, weak STEM</div>
-              </div>
-              <div className="space-y-1">
-                <div><strong>Balanced Active:</strong> Moderate but well-balanced</div>
-                <div><strong>STEM Leaning:</strong> Moderate with STEM preference</div>
-                <div><strong>Sports Leaning:</strong> Moderate with sports preference</div>
-                <div><strong>Needs Confidence:</strong> Low confidence in one/both areas</div>
-                <div><strong>Developing:</strong> Still building skills in both areas</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Cohort Archetype Composition */}
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Student Archetype Composition by Cohort</h3>
-            <div className="mb-3 text-sm text-gray-600">How student engagement patterns differ between cohorts</div>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={archetypeChartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="cohort" angle={-45} textAnchor="end" height={80} />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="High Balanced" stackId="archetype" fill="#10B981" />
-                <Bar dataKey="STEM Champion" stackId="archetype" fill="#3B82F6" />
-                <Bar dataKey="Sports Champion" stackId="archetype" fill="#059669" />
-                <Bar dataKey="STEM Specialist" stackId="archetype" fill="#60A5FA" />
-                <Bar dataKey="Sports Specialist" stackId="archetype" fill="#34D399" />
-                <Bar dataKey="STEM Leaning" stackId="archetype" fill="#93C5FD" />
-                <Bar dataKey="Sports Leaning" stackId="archetype" fill="#6EE7B7" />
-                <Bar dataKey="Balanced Active" stackId="archetype" fill="#8B5CF6" />
-                <Bar dataKey="Needs Confidence" stackId="archetype" fill="#F59E0B" />
-                <Bar dataKey="Developing" stackId="archetype" fill="#D1D5DB" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Student Skills Matrix */}
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Individual Student Skills Matrix</h3>
-            <div className="mb-3 text-sm text-gray-600">
-              Each row = student ID | Columns = skills | Color intensity = performance level
-            </div>
-            <div className="overflow-x-auto max-h-96 overflow-y-auto">
-              <div className="min-w-full">
-                {/* Header */}
-                <div className="grid grid-cols-11 gap-1 mb-2 text-xs font-medium">
-                  <div className="p-2 bg-gray-100 rounded">Student ID</div>
-                  <div className="p-2 bg-blue-100 rounded text-center">STEM Part.</div>
-                  <div className="p-2 bg-blue-100 rounded text-center">STEM Team</div>
-                  <div className="p-2 bg-blue-100 rounded text-center">STEM Task</div>
-                  <div className="p-2 bg-blue-100 rounded text-center">STEM Conf.</div>
-                  <div className="p-2 bg-green-100 rounded text-center">Sport Part.</div>
-                  <div className="p-2 bg-green-100 rounded text-center">Sport Team</div>
-                  <div className="p-2 bg-green-100 rounded text-center">Sport Task</div>
-                  <div className="p-2 bg-green-100 rounded text-center">Sport Conf.</div>
-                  <div className="p-2 bg-purple-100 rounded text-center">Cohort</div>
-                  <div className="p-2 bg-gray-100 rounded text-center">Type</div>
-                </div>
-                
-                {/* Student rows */}
-                {filteredData.slice(0, 20).map((student, index) => {
-                  const archetype = getStudentArchetype(student);
-                  const getColorIntensity = (score) => {
-                    const intensity = Math.min(Math.max(score / 4, 0), 1);
-                    return `rgba(59, 130, 246, ${intensity})`;
-                  };
-                  const getSportsColorIntensity = (score) => {
-                    const intensity = Math.min(Math.max(score / 4, 0), 1);
-                    return `rgba(16, 185, 129, ${intensity})`;
-                  };
-                  
-                  return (
-                    <div key={student.id} className="grid grid-cols-11 gap-1 mb-1 text-xs">
-                      <div className="p-2 bg-gray-50 rounded truncate font-medium" title={student.id}>
-                        {student.id}
-                      </div>
-                      <div 
-                        className="p-2 rounded text-center text-white font-medium"
-                        style={{ backgroundColor: getColorIntensity(student.stemParticipation) }}
-                      >
-                        {student.stemParticipation}
-                      </div>
-                      <div 
-                        className="p-2 rounded text-center text-white font-medium"
-                        style={{ backgroundColor: getColorIntensity(student.stemTeamwork) }}
-                      >
-                        {student.stemTeamwork}
-                      </div>
-                      <div 
-                        className="p-2 rounded text-center text-white font-medium"
-                        style={{ backgroundColor: getColorIntensity(student.stemTaskCompletion) }}
-                      >
-                        {student.stemTaskCompletion}
-                      </div>
-                      <div 
-                        className="p-2 rounded text-center text-white font-medium"
-                        style={{ backgroundColor: getColorIntensity(student.stemConfidence) }}
-                      >
-                        {student.stemConfidence}
-                      </div>
-                      <div 
-                        className="p-2 rounded text-center text-white font-medium"
-                        style={{ backgroundColor: getSportsColorIntensity(student.sportsParticipation) }}
-                      >
-                        {student.sportsParticipation}
-                      </div>
-                      <div 
-                        className="p-2 rounded text-center text-white font-medium"
-                        style={{ backgroundColor: getSportsColorIntensity(student.sportsTeamwork) }}
-                      >
-                        {student.sportsTeamwork}
-                      </div>
-                      <div 
-                        className="p-2 rounded text-center text-white font-medium"
-                        style={{ backgroundColor: getSportsColorIntensity(student.sportsTaskCompletion) }}
-                      >
-                        {student.sportsTaskCompletion}
-                      </div>
-                      <div 
-                        className="p-2 rounded text-center text-white font-medium"
-                        style={{ backgroundColor: getSportsColorIntensity(student.sportsConfidence) }}
-                      >
-                        {student.sportsConfidence}
-                      </div>
-                      <div className="p-2 bg-gray-50 rounded text-center text-xs">
-                        {student.cohort}
-                      </div>
-                      <div className="p-2 bg-gray-50 rounded text-center text-xs">
-                        {archetype.split(' ')[0]}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              {filteredData.length > 20 && (
-                <div className="text-center text-sm text-gray-500 mt-3">
-                  Showing first 20 students. Use cohort filter to see specific groups.
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Detailed Skills Breakdown */}
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Detailed Skills Breakdown by Cohort</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={detailedMetrics}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="cohort" angle={-45} textAnchor="end" height={80} />
-                <YAxis domain={[0, 4]} />
-                <Tooltip formatter={(value) => value.toFixed(2)} />
-                <Legend />
-                <Bar dataKey="STEM Participation" fill="#3B82F6" />
-                <Bar dataKey="STEM Confidence" fill="#1E40AF" />
-                <Bar dataKey="Sports Participation" fill="#10B981" />
-                <Bar dataKey="Sports Confidence" fill="#047857" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Detailed Analysis Table */}
-        <div className="bg-white rounded-lg p-6 shadow-lg mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Detailed Engagement Metrics by Cohort</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cohort</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Students</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">STEM Avg</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sports Avg</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">STEM Focused</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sports Focused</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Balanced</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {cohortStats.map((stat, index) => (
-                  <tr key={stat.cohort} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{stat.cohortDisplay}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{stat.size || 0}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{(stat.avgStemOverall || 0).toFixed(2)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">{(stat.avgSportsOverall || 0).toFixed(2)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{stat.stemDominantCount || 0}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{stat.sportsDominantCount || 0}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{stat.balancedStudents || 0}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Key Insights */}
-        <div className="bg-white rounded-lg p-6 shadow-lg">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Cohort Engagement Analysis</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">🏆 Strongest STEM Progression</h4>
-              <p className="text-gray-700 text-sm">
-                Comparing Fall 24 to Spring 25, <strong>John Muir shows significant STEM improvement</strong> (from earlier cohorts to current), 
-                while <strong>Bancroft maintains consistent sports-focused engagement</strong> across time periods.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">📊 Archetype Patterns by Cohort</h4>
-              <p className="text-gray-700 text-sm">
-                The archetype composition reveals why some cohorts excel in STEM: <strong>John Muir cohorts</strong> have more 
-                STEM Champions and Specialists, while <strong>Bancroft cohorts</strong> show Sports Champions and Sports Leaning patterns.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">🎯 Confidence Development</h4>
-              <p className="text-gray-700 text-sm">
-                Skills matrix reveals that <strong>confidence scores consistently lag behind participation and teamwork</strong> 
-                across all cohorts, suggesting targeted confidence-building could boost overall engagement effectiveness.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">📈 Program Evolution</h4>
-              <p className="text-gray-700 text-sm">
-                Chronological analysis shows <strong>program refinement over time</strong>, with newer cohorts displaying 
-                more balanced engagement patterns and higher overall participation across both STEM and sports activities.
-              </p>
-            </div>
-          </div>
-          
-          {/* Archetype Insights by Cohort */}
-          <div className="mt-6 border-t pt-4">
-            <h4 className="font-medium text-gray-900 mb-3">Archetype Composition Insights</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              {archetypesByCohort.map(cohort => {
-                const topArchetypes = Object.entries(cohort.archetypes)
-                  .sort(([,a], [,b]) => b - a)
-                  .slice(0, 3);
-                return (
-                  <div key={cohort.cohortCode} className="bg-gray-50 p-3 rounded">
-                    <h5 className="font-medium text-gray-900">{cohort.cohort}</h5>
-                    <p className="text-xs text-gray-600 mb-2">{cohort.totalStudents} total students</p>
-                    <div className="space-y-1">
-                      {topArchetypes.map(([archetype, count]) => (
-                        <div key={archetype} className="flex justify-between text-xs">
-                          <span>{archetype}:</span>
-                          <span className="font-medium">{count} students</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  );
-};
 
-export default EngagementDashboard;
+    <script>
+        console.log("Engagement dashboard starting...");
+        
+        function createEngagementDashboard() {
+            console.log("Creating engagement dashboard...");
+            
+            // Sample data for demonstration
+            const sampleData = [
+                { ID: "JM24b01", Cohort: "John Muir Fall 24", STEM_Participation: 3.5, STEM_Teamwork: 3.2, STEM_TaskCompletion: 3.8, STEM_Confidence: 3.0, Sports_Participation: 2.8, Sports_Teamwork: 3.1, Sports_TaskCompletion: 2.9, Sports_Confidence: 2.7 },
+                { ID: "JM24b02", Cohort: "John Muir Fall 24", STEM_Participation: 4.0, STEM_Teamwork: 3.8, STEM_TaskCompletion: 3.9, STEM_Confidence: 3.5, Sports_Participation: 2.5, Sports_Teamwork: 2.8, Sports_TaskCompletion: 2.6, Sports_Confidence: 2.4 },
+                { ID: "BA24b01", Cohort: "Bancroft Fall 24", STEM_Participation: 2.8, STEM_Teamwork: 3.0, STEM_TaskCompletion: 2.9, STEM_Confidence: 2.6, Sports_Participation: 3.7, Sports_Teamwork: 3.9, Sports_TaskCompletion: 3.8, Sports_Confidence: 3.5 },
+                { ID: "BA24b02", Cohort: "Bancroft Fall 24", STEM_Participation: 3.2, STEM_Teamwork: 3.1, STEM_TaskCompletion: 3.0, STEM_Confidence: 2.9, Sports_Participation: 3.8, Sports_Teamwork: 4.0, Sports_TaskCompletion: 3.9, Sports_Confidence: 3.7 },
+                { ID: "BA25S01", Cohort: "Bancroft Spring 25", STEM_Participation: 3.0, STEM_Teamwork: 3.2, STEM_TaskCompletion: 3.1, STEM_Confidence: 2.8, Sports_Participation: 3.6, Sports_Teamwork: 3.8, Sports_TaskCompletion: 3.7, Sports_Confidence: 3.4 },
+                { ID: "JM25S01", Cohort: "John Muir Spring 25", STEM_Participation: 3.8, STEM_Teamwork: 3.6, STEM_TaskCompletion: 3.9, STEM_Confidence: 3.4, Sports_Participation: 3.0, Sports_Teamwork: 3.2, Sports_TaskCompletion: 3.1, Sports_Confidence: 2.8 }
+            ];
+
+            let currentData = sampleData;
+            let selectedCohort = 'all';
+            let usingRealData = false;
+
+            // Cohort colors for chronological order
+            const cohortColors = {
+                'John Muir Fall 24': '#EF4444',     // Red (oldest)
+                'Bancroft Fall 24': '#F59E0B',      // Orange
+                'Bancroft Spring 25': '#10B981',    // Green
+                'John Muir Spring 25': '#3B82F6'    // Blue (newest)
+            };
+
+            // Process data
+            function processData(rawData) {
+                return rawData.map(d => {
+                    const stemAvg = (d.STEM_Participation + d.STEM_Teamwork + d.STEM_TaskCompletion + d.STEM_Confidence) / 4;
+                    const sportsAvg = (d.Sports_Participation + d.Sports_Teamwork + d.Sports_TaskCompletion + d.Sports_Confidence) / 4;
+                    
+                    return {
+                        id: d.ID,
+                        cohort: d.Cohort,
+                        stemParticipation: d.STEM_Participation,
+                        stemTeamwork: d.STEM_Teamwork,
+                        stemTaskCompletion: d.STEM_TaskCompletion,
+                        stemConfidence: d.STEM_Confidence,
+                        sportsParticipation: d.Sports_Participation,
+                        sportsTeamwork: d.Sports_Teamwork,
+                        sportsTaskCompletion: d.Sports_TaskCompletion,
+                        sportsConfidence: d.Sports_Confidence,
+                        stemAverage: stemAvg,
+                        sportsAverage: sportsAvg,
+                        overallEngagement: (stemAvg + sportsAvg) / 2,
+                        stemDominant: stemAvg > sportsAvg,
+                        engagementGap: Math.abs(stemAvg - sportsAvg)
+                    };
+                });
+            }
+
+            // Get student archetype
+            function getStudentArchetype(student) {
+                const stemAvg = student.stemAverage || 0;
+                const sportsAvg = student.sportsAverage || 0;
+                const gap = Math.abs(stemAvg - sportsAvg);
+                const overall = (stemAvg + sportsAvg) / 2;
+                
+                if (overall >= 3.5 && gap <= 0.5) return "High Balanced";
+                if (overall >= 3.5 && stemAvg > sportsAvg) return "STEM Champion";
+                if (overall >= 3.5 && sportsAvg > stemAvg) return "Sports Champion";
+                if (gap <= 0.5 && overall >= 2.5) return "Balanced Active";
+                if (stemAvg >= 3.5 && sportsAvg <= 2) return "STEM Specialist";
+                if (sportsAvg >= 3.5 && stemAvg <= 2) return "Sports Specialist";
+                if (overall >= 2.5 && stemAvg > sportsAvg) return "STEM Leaning";
+                if (overall >= 2.5 && sportsAvg > stemAvg) return "Sports Leaning";
+                if (student.stemConfidence <= 2 || student.sportsConfidence <= 2) return "Needs Confidence";
+                return "Developing";
+            }
+
+            // Calculate cohort statistics
+            function calculateCohortStats(data) {
+                const cohorts = ['John Muir Fall 24', 'Bancroft Fall 24', 'Bancroft Spring 25', 'John Muir Spring 25'];
+                
+                return cohorts.map(cohort => {
+                    const cohortData = data.filter(d => d.cohort === cohort);
+                    if (cohortData.length === 0) return null;
+                    
+                    const avgStem = cohortData.reduce((sum, d) => sum + d.stemAverage, 0) / cohortData.length;
+                    const avgSports = cohortData.reduce((sum, d) => sum + d.sportsAverage, 0) / cohortData.length;
+                    const stemDominant = cohortData.filter(d => d.stemDominant).length;
+                    const sportsDominant = cohortData.filter(d => !d.stemDominant).length;
+                    
+                    return {
+                        cohort,
+                        size: cohortData.length,
+                        avgStem: avgStem.toFixed(2),
+                        avgSports: avgSports.toFixed(2),
+                        stemDominant,
+                        sportsDominant,
+                        avgParticipation: {
+                            stem: (cohortData.reduce((sum, d) => sum + d.stemParticipation, 0) / cohortData.length).toFixed(2),
+                            sports: (cohortData.reduce((sum, d) => sum + d.sportsParticipation, 0) / cohortData.length).toFixed(2)
+                        },
+                        avgConfidence: {
+                            stem: (cohortData.reduce((sum, d) => sum + d.stemConfidence, 0) / cohortData.length).toFixed(2),
+                            sports: (cohortData.reduce((sum, d) => sum + d.sportsConfidence, 0) / cohortData.length).toFixed(2)
+                        }
+                    };
+                }).filter(stat => stat !== null);
+            }
+
+            // Get color intensity based on score
+            function getColorIntensity(score, type = 'stem') {
+                const intensity = Math.min(Math.max(score / 4, 0.2), 1);
+                const baseColor = type === 'stem' ? '59, 130, 246' : '16, 185, 129';
+                return `rgba(${baseColor}, ${intensity})`;
+            }
+
+            // Render dashboard
+            function render() {
+                const processedData = processData(currentData);
+                const cohortStats = calculateCohortStats(processedData);
+                const filteredData = selectedCohort === 'all' ? processedData : processedData.filter(d => d.cohort === selectedCohort);
+                
+                const cohorts = [...new Set(processedData.map(d => d.cohort))];
+
+                const root = document.getElementById('dashboard-root');
+                
+                root.innerHTML = `
+                    <div class="dashboard">
+                        <div class="${usingRealData ? 'success-message' : 'warning-message'}">
+                            ${usingRealData ? 
+                                `✅ Real engagement data loaded successfully! Analyzing ${processedData.length} student records.` :
+                                `⚠️ Dashboard loaded with sample data. Upload 'SOTC SLUSD Data  AfterSchoolEngagement.csv' to see real results.`
+                            }
+                        </div>
+
+                        <div class="header">
+                            <h1 class="title">STEM vs Sports Engagement Analysis</h1>
+                            <p class="subtitle">Comprehensive analysis of student engagement patterns across activities</p>
+                        </div>
+
+                        <div class="filter-container">
+                            <select class="filter-select" onchange="handleCohortChange(this.value)">
+                                <option value="all">All Cohorts</option>
+                                ${cohorts.map(cohort => `
+                                    <option value="${cohort}" ${selectedCohort === cohort ? 'selected' : ''}>${cohort}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+
+                        <!-- Cohort Summary Cards -->
+                        <div class="grid grid-4">
+                            ${cohortStats.map(stat => `
+                                <div class="card cohort-card" style="border-left-color: ${cohortColors[stat.cohort]};">
+                                    <h3 class="card-title">${stat.cohort}</h3>
+                                    <p style="color: #7f8c8d; margin-bottom: 15px;">${stat.size} students</p>
+                                    <div class="stat-grid">
+                                        <div class="stat-row">
+                                            <span class="stat-label">STEM Avg:</span>
+                                            <span class="stat-value stem-value">${stat.avgStem}/4</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">Sports Avg:</span>
+                                            <span class="stat-value sports-value">${stat.avgSports}/4</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">STEM Focused:</span>
+                                            <span class="stat-value">${stat.stemDominant} students</span>
+                                        </div>
+                                        <div class="stat-row">
+                                            <span class="stat-label">Sports Focused:</span>
+                                            <span class="stat-value">${stat.sportsDominant} students</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <!-- Charts Grid -->
+                        <div class="grid grid-2">
+                            <!-- STEM vs Sports Comparison Chart -->
+                            <div class="card">
+                                <h3 class="card-title">STEM vs Sports Engagement by Cohort</h3>
+                                <p style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;">Chronological order: Fall 24 → Spring 25</p>
+                                <div class="legend">
+                                    <div class="legend-item">
+                                        <div class="legend-color stem-bar"></div>
+                                        <span>STEM</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color sports-bar"></div>
+                                        <span>Sports</span>
+                                    </div>
+                                </div>
+                                <div class="bar-chart">
+                                    ${cohortStats.map(stat => `
+                                        <div class="bar-group">
+                                            <div class="bar-pair">
+                                                <div class="bar stem-bar" 
+                                                     style="height: ${(stat.avgStem / 4) * 150}px;"
+                                                     title="STEM: ${stat.avgStem}"></div>
+                                                <div class="bar sports-bar" 
+                                                     style="height: ${(stat.avgSports / 4) * 150}px;"
+                                                     title="Sports: ${stat.avgSports}"></div>
+                                            </div>
+                                            <div class="bar-label">${stat.cohort.split(' ').slice(-2).join(' ')}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Skills Matrix -->
+                            <div class="card">
+                                <h3 class="card-title">Individual Student Skills Matrix</h3>
+                                <p style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;">
+                                    Color intensity shows performance level (darker = higher scores)
+                                </p>
+                                <div class="skills-matrix">
+                                    <div class="matrix-header">
+                                        <div class="matrix-header-cell">Student ID</div>
+                                        <div class="matrix-header-cell">STEM Part.</div>
+                                        <div class="matrix-header-cell">STEM Team</div>
+                                        <div class="matrix-header-cell">STEM Task</div>
+                                        <div class="matrix-header-cell">STEM Conf.</div>
+                                        <div class="matrix-header-cell">Sport Part.</div>
+                                        <div class="matrix-header-cell">Sport Team</div>
+                                        <div class="matrix-header-cell">Sport Task</div>
+                                        <div class="matrix-header-cell">Sport Conf.</div>
+                                        <div class="matrix-header-cell">Cohort</div>
+                                        <div class="matrix-header-cell">Type</div>
+                                    </div>
+                                    ${filteredData.slice(0, 15).map(student => {
+                                        const archetype = getStudentArchetype(student);
+                                        return `
+                                            <div class="matrix-row">
+                                                <div class="matrix-cell id-cell">${student.id}</div>
+                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.stemParticipation, 'stem')}">${student.stemParticipation}</div>
+                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.stemTeamwork, 'stem')}">${student.stemTeamwork}</div>
+                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.stemTaskCompletion, 'stem')}">${student.stemTaskCompletion}</div>
+                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.stemConfidence, 'stem')}">${student.stemConfidence}</div>
+                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.sportsParticipation, 'sports')}">${student.sportsParticipation}</div>
+                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.sportsTeamwork, 'sports')}">${student.sportsTeamwork}</div>
+                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.sportsTaskCompletion, 'sports')}">${student.sportsTaskCompletion}</div>
+                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.sportsConfidence, 'sports')}">${student.sportsConfidence}</div>
+                                                <div class="matrix-cell archetype-cell">${student.cohort.split(' ').slice(-2).join(' ')}</div>
+                                                <div class="matrix-cell archetype-cell">${archetype.split(' ')[0]}</div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                    ${filteredData.length > 15 ? `
+                                        <div style="text-align: center; padding: 15px; color: #7f8c8d; font-size: 0.9rem;">
+                                            Showing first 15 students. Use cohort filter to see specific groups.
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Analysis Table -->
+                        <div class="card">
+                            <h3 class="card-title">Detailed Engagement Metrics by Cohort</h3>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Cohort</th>
+                                        <th>Students</th>
+                                        <th>STEM Avg</th>
+                                        <th>Sports Avg</th>
+                                        <th>STEM Focused</th>
+                                        <th>Sports Focused</th>
+                                        <th>STEM Participation</th>
+                                        <th>Sports Participation</th>
+                                        <th>STEM Confidence</th>
+                                        <th>Sports Confidence</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${cohortStats.map((stat, index) => `
+                                        <tr style="background-color: ${index % 2 === 0 ? 'white' : '#f9fafb'};">
+                                            <td style="font-weight: 600;">${stat.cohort}</td>
+                                            <td>${stat.size}</td>
+                                            <td style="color: #3b82f6; font-weight: 600;">${stat.avgStem}</td>
+                                            <td style="color: #10b981; font-weight: 600;">${stat.avgSports}</td>
+                                            <td>${stat.stemDominant}</td>
+                                            <td>${stat.sportsDominant}</td>
+                                            <td style="color: #3b82f6;">${stat.avgParticipation.stem}</td>
+                                            <td style="color: #10b981;">${stat.avgParticipation.sports}</td>
+                                            <td style="color: #3b82f6;">${stat.avgConfidence.stem}</td>
+                                            <td style="color: #10b981;">${stat.avgConfidence.sports}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Key Insights -->
+                        <div class="card">
+                            <h3 class="card-title">Key Engagement Insights</h3>
+                            <div class="insights-grid">
+                                <div class="insight-card">
+                                    <div class="insight-title">🏆 Strongest STEM Progression</div>
+                                    <div class="insight-text">
+                                        Comparing Fall 24 to Spring 25, <strong>John Muir shows significant STEM improvement</strong>, 
+                                        while <strong>Bancroft maintains consistent sports-focused engagement</strong> across time periods.
+                                    </div>
+                                </div>
+                                <div class="insight-card">
+                                    <div class="insight-title">🎯 Confidence Development</div>
+                                    <div class="insight-text">
+                                        Skills matrix reveals that <strong>confidence scores consistently lag behind participation</strong> 
+                                        across all cohorts, suggesting targeted confidence-building could boost overall engagement.
+                                    </div>
+                                </div>
+                                <div class="insight-card">
+                                    <div class="insight-title">📊 Archetype Patterns</div>
+                                    <div class="insight-text">
+                                        <strong>John Muir cohorts</strong> have more STEM Champions and Specialists, 
+                                        while <strong>Bancroft cohorts</strong> show Sports Champions and Sports Leaning patterns.
+                                    </div>
+                                </div>
+                                <div class="insight-card">
+                                    <div class="insight-title">📈 Program Evolution</div>
+                                    <div class="insight-text">
+                                        Chronological analysis shows <strong>program refinement over time</strong>, with newer cohorts 
+                                        displaying more balanced engagement patterns and higher overall participation.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Archetype Legend -->
+                        <div class="card">
+                            <h3 class="card-title">Student Archetype Definitions</h3>
+                            <div class="insights-grid">
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                                    <div style="font-weight: 600; margin-bottom: 10px;">High Performance Types</div>
+                                    <div style="font-size: 0.9rem; line-height: 1.4;">
+                                        <strong>High Balanced:</strong> Strong in both areas (3.5+ avg, &lt;0.5 gap)<br>
+                                        <strong>STEM Champion:</strong> High overall with STEM dominance<br>
+                                        <strong>Sports Champion:</strong> High overall with sports dominance
+                                    </div>
+                                </div>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                                    <div style="font-weight: 600; margin-bottom: 10px;">Specialist Types</div>
+                                    <div style="font-size: 0.9rem; line-height: 1.4;">
+                                        <strong>STEM Specialist:</strong> Strong STEM, weak sports<br>
+                                        <strong>Sports Specialist:</strong> Strong sports, weak STEM<br>
+                                        <strong>STEM Leaning:</strong> Moderate with STEM preference<br>
+                                        <strong>Sports Leaning:</strong> Moderate with sports preference
+                                    </div>
+                                </div>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                                    <div style="font-weight: 600; margin-bottom: 10px;">Developing Types</div>
+                                    <div style="font-size: 0.9rem; line-height: 1.4;">
+                                        <strong>Balanced Active:</strong> Moderate but well-balanced<br>
+                                        <strong>Needs Confidence:</strong> Low confidence in one/both areas<br>
+                                        <strong>Developing:</strong> Still building skills in both areas
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Global event handlers
+            window.handleCohortChange = function(cohort) {
+                selectedCohort = cohort;
+                render();
+            };
+
+            // Try to load real data
+            function tryLoadRealData() {
+                const possiblePaths = [
+                    './data/SOTC SLUSD Data  AfterSchoolEngagement.csv',
+                    'data/SOTC SLUSD Data  AfterSchoolEngagement.csv',
+                    './SOTC SLUSD Data  AfterSchoolEngagement.csv'
+                ];
+
+                Promise.all(possiblePaths.map(path => 
+                    fetch(path)
+                        .then(response => response.ok ? response.text() : null)
+                        .catch(() => null)
+                )).then(results => {
+                    const csvContent = results.find(result => result !== null);
+                    if (csvContent) {
+                        console.log("Real engagement data loaded successfully!");
+                        
+                        // Parse CSV manually
+                        const lines = csvContent.trim().split('\n');
+                        const dataLines = lines.slice(1).filter(line => 
+                            line.includes('John Muir') || line.includes('Bancroft')
+                        );
+
+                        const parsedData = dataLines.map(line => {
+                            const parts = line.split(',');
+                            if (parts.length >= 10) {
+                                return {
+                                    ID: parts[0].trim(),
+                                    Cohort: parts[1].trim(),
+                                    STEM_Participation: parseFloat(parts[2]) || 0,
+                                    STEM_Teamwork: parseFloat(parts[3]) || 0,
+                                    STEM_TaskCompletion: parseFloat(parts[4]) || 0,
+                                    STEM_Confidence: parseFloat(parts[5]) || 0,
+                                    Sports_Participation: parseFloat(parts[6]) || 0,
+                                    Sports_Teamwork: parseFloat(parts[7]) || 0,
+                                    Sports_TaskCompletion: parseFloat(parts[8]) || 0,
+                                    Sports_Confidence: parseFloat(parts[9]) || 0
+                                };
+                            }
+                            return null;
+                        }).filter(record => record !== null);
+                        
+                        if (parsedData.length > 0) {
+                            currentData = parsedData;
+                            usingRealData = true;
+                            console.log(`Successfully processed ${parsedData.length} engagement records`);
+                        }
+                    } else {
+                        console.log("Engagement CSV file not found, using sample data");
+                        usingRealData = false;
+                    }
+                    render();
+                }).catch(error => {
+                    console.error("Error loading engagement data:", error);
+                    usingRealData = false;
+                    render();
+                });
+            }
+
+            // Start loading data
+            tryLoadRealData();
+        }
+
+        // Start the dashboard
+        try {
+            console.log("Initializing engagement dashboard...");
+            createEngagementDashboard();
+        } catch (error) {
+            console.error("Engagement dashboard error:", error);
+            document.getElementById('dashboard-root').innerHTML = `
+                <div style="color: #e74c3c; background: #fdf2f2; padding: 20px; border-radius: 10px; margin: 20px; border: 1px solid #e74c3c;">
+                    <h3>Dashboard Error</h3>
+                    <p>There was an error loading the engagement dashboard: ${error.message}</p>
+                    <p>Please check the browser console for more details.</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
