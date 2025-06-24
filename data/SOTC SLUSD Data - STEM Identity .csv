@@ -1,0 +1,86 @@
+ID ,Race/Ethnicity ,Gender,Pre-Considering STEM,Pre-Considering Sports ,Post-Considering STEM,Post Considering Sports 
+JM25a01,Black or African American,Male,No,Yes,Maybe,Yes
+JM25a02,White,Female,maybe,No,Yes,No
+JM25a03,Asian,Male,yes,no,Yes,no
+JM25a04,Asian,Male,yes,no,yes,no
+JM25a05,Black or African American,Male,yes,yes,yes,yes
+JM25a06,Asian,Male,maybe,yes,maybe,yes
+JM25a07,Two or More Races,Male,maybe,maybe,Maybe,maybe
+JM25a08,Hispanic or Latino,Male,Maybe,no,yes,no
+JM25a09,Hispanic or Latino,Male,Maybe,no,Yes,no
+JM25a10,Hispanic or Latino,Male,Maybe,no,Yes,no
+JM25a11,Black or African American,Male,No,no,Maybe,no
+JM25a12,Hispanic or Latino,Male,Yes,yes,Yes,yes
+JM25a13,Asian,Male,yes,no,Yes,no
+JM25a14,Black or African American,Male,No,yes,Maybe,yes
+JM25a15,Asian,Male,No,yes,maybe,yes
+JM25a16,Two or More Races,Male,No,no,No,no
+JM25a17,Asian,Male,No,no,No,no
+JM25a18,Black or African American,Male,yes,no,yes,no
+JM25a19,Hispanic or Latino,Male,No,No,No,No
+JM25a20,Hispanic or Latino,Male,No,no,no,no
+JM25a22,Asian,Male,Maybe,no,maybe,no
+JM25a23,Two or More Races,Female,No,No,maybe,No
+BA2501,Black or African American,Male,maybe,no,yes,no
+BA2502,Asian,Male,maybe,No,yes,No
+BA2503,Black or African American,Male,yes,no,yes,no
+BA2504,Hispanic or Latino,Male,Maybe,no,Maybe,no
+BA2505,Asian,Male,No,no,maybe,no
+BA2506,Black or African American,Male,No,Yes,yes,Yes
+BA2507,Black or African American,Male,No,yes,yes,yes
+BA2508,Black or African American,Male,No,maybe,Maybe,maybe
+BA2509,Black or African American,Male,no,Yes,Yes,Yes
+BA2510,Black or African American,Male,No,Yes,no,Yes
+BA2511,Black or African American,Male,No,Yes,Maybe,Yes
+BA2512,Black or African American,Male,no,Yes,no,Yes
+BA2513,Hispanic or Latino,Male,maybe,No,maybe,No
+BA2514,Hispanic or Latino,Male,Maybe,Maybe,Maybe,Maybe
+BA2515,Black or African American,Male,No,maybe,Maybe,maybe
+BA2516,Black or African American,Male,No,Yes,yes,Yes
+BA2517,Black or African American,Male,no,yes,no,yes
+BA2518,Black or African American,Male,No,yes,Maybe,yes
+BA2519,Asian,Male,No,No,maybe,No
+BA2520,Asian,Male,No,no,maybe,no
+BA2521,Black or African American,Male,No,yes,No,yes
+JM24b01,"Black or African American , Asian",Male,No,No,Maybe,No
+JM24b02,Asian,Male,No,No,No,No
+JM24b03,"White , Asian",Female,Maybe,No,Yes,No
+JM24b04,Asian,Female,No,No,No,No
+JM24b05,Asian,Male,No,No,No,No
+JM24b06,Asian,Male,No,No,No,No
+JM24b07,Asian,Male,Yes,No,Yes,Yes
+JM24b08,"Two or More Races,  Black or African American",Male,No,No,No,No
+JM24b09,Asian,Male,Maybe,No,Yes,No
+JM24b10,Black or African American,Male,Maybe,Maybe,Yes,Maybe
+JM24b11,Asian,Male,No,No,No,No
+JM24b12,Asian,Male,No,Maybe,Maybe,Maybe
+JM24b13,"Black or African American , Hispanic or Latino",Male,No,No,No,No
+JM24b14,Hispanic or Latino,Male,No,No,Yes,No
+JM24b15,Hispanic or Latino,Male,No,No,Maybe,No
+JM24b16,Hispanic or Latino,Male,Maybe,No,Yes,No
+JM24b17,"Hispanic or Latino , Asian",Male,No,No,No,No
+JM24b18,Black or African American,Male,Maybe,No,Yes,No
+JM24b19,"Hispanic or Latino , Asian",Male,No,No,Yes,No
+JM24b20,Hispanic or Latino,Male,Maybe,No,Maybe,No
+JM24b21,"Hispanic or Latino ,  Black or African American",Male,No,No,Maybe,Maybe
+JM24b22,Hispanic or Latino,Male,Maybe,Maybe,Yes,Maybe
+JM24b23,Hispanic or Latino,Male,Yes,No,Yes,Yes
+JM24b24,White,Male,No,No,No,No
+JM24b25,Asian,Male,Maybe,Maybe,Yes,Yes
+BA24b01,Asian,Male,Maybe,No,Yes,No
+BA24b02,Asian,Male,No,No,Maybe,No
+BA24b03,Hispanic or Latino,Male,No,No,Yes,No
+BA24b04,"Black or African American , Hispanic or Latino",Male,No,Yes,Maybe,Yes
+BA24b05,Black or African American,Male,No,No,No,No
+BA24b06,Black or African American,Male,No,No,Yes,No
+BA24b07,"White , Native Hawaiian or Other Pacific Islander",Male,No,No,No,No
+BA24b08,Black or African American,Male,Yes,No,Yes,No
+BA24b09,,Male,No,No,Maybe,No
+BA24b10,Black or African American,Male,No,No,No,No
+BA24b11,"Two or More Races, Hispanic or Latino",Male,No,No,No,No
+BA24b12,Two or More Races,Male,No,No,No,No
+BA24b13,Black or African American,Male,No,No,No,No
+BA24b14,Black or African American,Male,No,Yes,Yes,Yes
+BA24b15,Black or African American,Male,No,No,No,No
+BA24b16,Asian,Male,Maybe,No,Yes,No
+BA24b17,Asian,Male,No,No,No,No
