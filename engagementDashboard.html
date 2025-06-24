@@ -70,7 +70,25 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         }
         .grid-2 {
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        }
+        .tier-breakdown {
+            background: #fafbfc;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .tier-segment {
+            transition: all 0.3s ease;
+        }
+        .tier-segment:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+        .attendance-bar {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .card {
             background: white;
@@ -276,6 +294,13 @@
             .dashboard {
                 padding: 10px;
             }
+
+            // Get color intensity based on score (for skills matrix)
+            function getColorIntensity(score, type = 'stem') {
+                const intensity = Math.min(Math.max(score / 4, 0.2), 1);
+                const baseColor = type === 'stem' ? '59, 130, 246' : '16, 185, 129';
+                return `rgba(${baseColor}, ${intensity})`;
+            }
             .title {
                 font-size: 2rem;
             }
@@ -407,11 +432,91 @@
                 }).filter(stat => stat !== null);
             }
 
-            // Get color intensity based on score
-            function getColorIntensity(score, type = 'stem') {
-                const intensity = Math.min(Math.max(score / 4, 0.2), 1);
-                const baseColor = type === 'stem' ? '59, 130, 246' : '16, 185, 129';
-                return `rgba(${baseColor}, ${intensity})`;
+            // Attendance data based on your tier structure
+            function getAttendanceData() {
+                return [
+                    {
+                        name: 'John Muir Spring 25',
+                        participants: 21,
+                        totalAttendance: 76,
+                        tiers: [
+                            { tier: 1, count: 5, percentage: 24 },
+                            { tier: 2, count: 2, percentage: 10 },
+                            { tier: 3, count: 0, percentage: 0 },
+                            { tier: 4, count: 3, percentage: 14 },
+                            { tier: 5, count: 11, percentage: 52 }
+                        ]
+                    },
+                    {
+                        name: 'Bancroft Spring 25',
+                        participants: 20,
+                        totalAttendance: 76,
+                        tiers: [
+                            { tier: 1, count: 1, percentage: 5 },
+                            { tier: 2, count: 0, percentage: 0 },
+                            { tier: 3, count: 4, percentage: 20 },
+                            { tier: 4, count: 13, percentage: 65 },
+                            { tier: 5, count: 4, percentage: 20 }
+                        ]
+                    },
+                    {
+                        name: 'John Muir Fall 24',
+                        participants: 25,
+                        totalAttendance: 52,
+                        tiers: [
+                            { tier: 1, count: 5, percentage: 20 },
+                            { tier: 2, count: 2, percentage: 8 },
+                            { tier: 3, count: 0, percentage: 0 },
+                            { tier: 4, count: 2, percentage: 8 },
+                            { tier: 5, count: 16, percentage: 64 }
+                        ]
+                    },
+                    {
+                        name: 'Bancroft Fall 24',
+                        participants: 17,
+                        totalAttendance: 53,
+                        tiers: [
+                            { tier: 1, count: 4, percentage: 24 },
+                            { tier: 2, count: 1, percentage: 6 },
+                            { tier: 3, count: 0, percentage: 0 },
+                            { tier: 4, count: 4, percentage: 24 },
+                            { tier: 5, count: 7, percentage: 41 }
+                        ]
+                    }
+                ];
+            }
+
+            // Color scheme for attendance tiers
+            function getTierColor(tierIndex) {
+                const colors = [
+                    '#ef4444', // Tier 1 - Red (low attendance)
+                    '#f97316', // Tier 2 - Orange
+                    '#eab308', // Tier 3 - Yellow
+                    '#22c55e', // Tier 4 - Green
+                    '#15803d'  // Tier 5 - Dark Green (high attendance)
+                ];
+                return colors[tierIndex] || '#6b7280';
+            }
+
+            // Get engagement stats for cohort
+            function getEngagementStats(cohortName) {
+                const cohortData = processData(currentData).filter(d => d.cohort === cohortName);
+                if (cohortData.length === 0) {
+                    return { stemAvg: '0.0', sportsAvg: '0.0', avgAttendancePerStudent: '0.0' };
+                }
+
+                const stemAvg = (cohortData.reduce((sum, d) => sum + d.stemAverage, 0) / cohortData.length).toFixed(1);
+                const sportsAvg = (cohortData.reduce((sum, d) => sum + d.sportsAverage, 0) / cohortData.length).toFixed(1);
+                
+                // Calculate average attendance per student based on tier data
+                const attendanceData = getAttendanceData().find(a => a.name === cohortName);
+                const avgAttendance = attendanceData ? (attendanceData.totalAttendance / attendanceData.participants).toFixed(1) : '0.0';
+
+                return {
+                    stemAvg,
+                    sportsAvg,
+                    avgAttendancePerStudent: avgAttendance
+                };
             }
 
             // Render dashboard
@@ -447,28 +552,70 @@
                             </select>
                         </div>
 
-                        <!-- Cohort Summary Cards -->
-                        <div class="grid grid-4">
-                            ${cohortStats.map(stat => `
-                                <div class="card cohort-card" style="border-left-color: ${cohortColors[stat.cohort]};">
-                                    <h3 class="card-title">${stat.cohort}</h3>
-                                    <p style="color: #7f8c8d; margin-bottom: 15px;">${stat.size} students</p>
-                                    <div class="stat-grid">
-                                        <div class="stat-row">
-                                            <span class="stat-label">STEM Avg:</span>
-                                            <span class="stat-value stem-value">${stat.avgStem}/4</span>
+                        <!-- Cohort Attendance Analysis -->
+                        <div class="grid grid-2">
+                            ${getAttendanceData().map(cohort => `
+                                <div class="card" style="border-left: 4px solid ${cohortColors[cohort.name]};">
+                                    <h3 class="card-title">${cohort.name}</h3>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                        <div>
+                                            <span style="font-size: 1.5rem; font-weight: bold; color: #2c3e50;">${cohort.participants}</span>
+                                            <span style="color: #7f8c8d; margin-left: 5px;">participants</span>
                                         </div>
-                                        <div class="stat-row">
-                                            <span class="stat-label">Sports Avg:</span>
-                                            <span class="stat-value sports-value">${stat.avgSports}/4</span>
+                                        <div style="text-align: right;">
+                                            <span style="font-size: 1.2rem; font-weight: 600; color: #3b82f6;">${cohort.totalAttendance}</span>
+                                            <span style="color: #7f8c8d; display: block; font-size: 0.8rem;">total attendance</span>
                                         </div>
-                                        <div class="stat-row">
-                                            <span class="stat-label">STEM Focused:</span>
-                                            <span class="stat-value">${stat.stemDominant} students</span>
+                                    </div>
+                                    
+                                    <!-- Attendance Tier Visualization -->
+                                    <div style="margin-bottom: 15px;">
+                                        <div style="font-size: 0.9rem; font-weight: 600; color: #374151; margin-bottom: 8px;">Attendance Distribution</div>
+                                        <div style="display: flex; height: 20px; border-radius: 10px; overflow: hidden; background: #f3f4f6;">
+                                            ${cohort.tiers.map((tier, index) => `
+                                                <div style="background: ${getTierColor(index)}; width: ${tier.percentage}%; height: 100%; position: relative;" 
+                                                     title="Tier ${index + 1}: ${tier.percentage}% (${tier.count} students)">
+                                                </div>
+                                            `).join('')}
                                         </div>
-                                        <div class="stat-row">
-                                            <span class="stat-label">Sports Focused:</span>
-                                            <span class="stat-value">${stat.sportsDominant} students</span>
+                                        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.7rem; color: #6b7280;">
+                                            <span>Tier 1 (≤10%)</span>
+                                            <span>Tier 2 (11-25%)</span>
+                                            <span>Tier 3 (26-49%)</span>
+                                            <span>Tier 4 (50-74%)</span>
+                                            <span>Tier 5 (≥75%)</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Detailed Tier Breakdown -->
+                                    <div class="tier-breakdown">
+                                        ${cohort.tiers.map((tier, index) => `
+                                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #f3f4f6;">
+                                                <div style="display: flex; align-items: center;">
+                                                    <div style="width: 12px; height: 12px; background: ${getTierColor(index)}; border-radius: 2px; margin-right: 8px;"></div>
+                                                    <span style="font-size: 0.8rem; color: #374151;">Tier ${index + 1}</span>
+                                                </div>
+                                                <div style="text-align: right;">
+                                                    <span style="font-weight: 600; color: #1f2937; font-size: 0.9rem;">${tier.count}</span>
+                                                    <span style="color: #6b7280; font-size: 0.8rem; margin-left: 4px;">(${tier.percentage}%)</span>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+
+                                    <!-- Average Engagement Quick Stats -->
+                                    <div style="display: flex; justify-content: space-around; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                                        <div style="text-align: center;">
+                                            <div style="font-size: 1.1rem; font-weight: 600; color: #3b82f6;">${getEngagementStats(cohort.name).stemAvg}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">STEM Avg</div>
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <div style="font-size: 1.1rem; font-weight: 600; color: #10b981;">${getEngagementStats(cohort.name).sportsAvg}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">Sports Avg</div>
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <div style="font-size: 1.1rem; font-weight: 600; color: #8b5cf6;">${getEngagementStats(cohort.name).avgAttendancePerStudent}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">Avg Attendance</div>
                                         </div>
                                     </div>
                                 </div>
@@ -671,8 +818,8 @@
             // Try to load real data
             function tryLoadRealData() {
                 const possiblePaths = [
-                    './data/SOTC SLUSD Data - AfterSchoolEngagement.csv',
-                    'data/SOTC SLUSD Data - AfterSchoolEngagement.csv',
+                    './data/SOTC SLUSD Data  AfterSchoolEngagement.csv',
+                    'data/SOTC SLUSD Data  AfterSchoolEngagement.csv',
                     './SOTC SLUSD Data  AfterSchoolEngagement.csv'
                 ];
 
