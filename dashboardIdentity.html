@@ -1,158 +1,651 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SOTC STEM Identity Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f9fafb;
-      padding: 2rem;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .chart-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-    canvas {
-      background: white;
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youth STEM & Sports Program Analysis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            color: #374151;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .blue { color: #2563eb; }
+        .green { color: #059669; }
+        .orange { color: #d97706; }
+        .purple { color: #7c3aed; }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .chart-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+        
+        .insights {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .insights h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .insight-card {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .insight-green {
+            background-color: #ecfdf5;
+            border-left: 4px solid #059669;
+        }
+        
+        .insight-blue {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+        }
+        
+        .insight-purple {
+            background-color: #f3e8ff;
+            border-left: 4px solid #7c3aed;
+        }
+        
+        .insight-card h3 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .insight-green h3 { color: #065f46; }
+        .insight-blue h3 { color: #1e40af; }
+        .insight-purple h3 { color: #5b21b6; }
+        
+        .insight-card p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .insight-green p { color: #047857; }
+        .insight-blue p { color: #1d4ed8; }
+        .insight-purple p { color: #6d28d9; }
+        
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.1rem;
+            color: #6b7280;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.1rem;
+            color: #dc2626;
+        }
+        
+        .debug {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            color: #4b5563;
+            margin-top: 2rem;
+        }
+        
+        .debug h3 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-card {
+                min-width: 0;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>SOTC STEM Identity Dashboard</h1>
-  <div class="chart-container">
-    <canvas id="raceChart"></canvas>
-    <canvas id="stemChangeChart"></canvas>
-    <canvas id="sportsChangeChart"></canvas>
-    <canvas id="stemPrePostChart"></canvas>
-  </div>
+    <div class="container">
+        <div class="header">
+            <h1>Youth STEM & Sports Program Analysis</h1>
+            <p>Analysis of participant demographics and interest changes in STEM and sports</p>
+            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">Data source: data/STEMIdentity.csv</p>
+        </div>
+        
+        <div id="loading" class="loading">
+            Loading data...
+        </div>
+        
+        <div id="error" class="error" style="display: none;">
+        </div>
+        
+        <div id="dashboard" style="display: none;">
+            <!-- Summary Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Participants</h3>
+                    <div class="stat-value blue" id="totalParticipants">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>STEM Interest Increased</h3>
+                    <div class="stat-value green" id="stemIncreased">0</div>
+                    <div class="stat-subtitle" id="stemPercentage">0% of participants</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Sports Interest Increased</h3>
+                    <div class="stat-value orange" id="sportsIncreased">0</div>
+                    <div class="stat-subtitle" id="sportsPercentage">0% of participants</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Gender Split</h3>
+                    <div class="stat-value purple" id="genderSplit">0M / 0F</div>
+                    <div class="stat-subtitle" id="genderPercentage">0% Male</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2>Participant Demographics by Race/Ethnicity</h2>
+                    <div class="chart-container">
+                        <canvas id="demographicsChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h2>Interest Changes: STEM vs Sports</h2>
+                    <div class="chart-container">
+                        <canvas id="changesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2>STEM Interest Changes by Race/Ethnicity</h2>
+                    <div class="chart-container">
+                        <canvas id="stemByRaceChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h2>STEM Interest: Before vs After Program</h2>
+                    <div class="chart-container">
+                        <canvas id="prePostChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Insights -->
+            <div class="insights">
+                <h2>Key Insights</h2>
+                <div class="insights-grid">
+                    <div class="insight-card insight-green">
+                        <h3>STEM Success</h3>
+                        <p id="stemInsight">Loading...</p>
+                    </div>
+                    <div class="insight-card insight-blue">
+                        <h3>Stable Sports Interest</h3>
+                        <p id="sportsInsight">Loading...</p>
+                    </div>
+                    <div class="insight-card insight-purple">
+                        <h3>Demographics</h3>
+                        <p id="demographicsInsight">Loading...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Debug Info -->
+            <div class="debug">
+                <h3>Debug Info:</h3>
+                <div id="debugInfo">Loading...</div>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    function normalizeResponse(value) {
-      const v = value?.toLowerCase().trim();
-      if (v === 'yes') return 'Yes';
-      if (v === 'no') return 'No';
-      if (v === 'maybe') return 'Maybe';
-      return 'Not specified';
-    }
-
-    function simplifyRace(race) {
-      if (!race) return 'Not specified';
-      if (race.includes('Black')) return 'Black/African American';
-      if (race.includes('Hispanic')) return 'Hispanic/Latino';
-      if (race.includes('Asian')) return 'Asian';
-      if (race.includes('White')) return 'White';
-      if (race.includes('Two')) return 'Multiracial';
-      if (race.includes('Hawaiian')) return 'Pacific Islander';
-      return 'Other';
-    }
-
-    function renderDashboard(data) {
-      const raceCounts = {};
-      const stemChange = { Increased: 0, Decreased: 0, 'No change': 0 };
-      const sportsChange = { Increased: 0, Decreased: 0, 'No change': 0 };
-      const stemPre = { Yes: 0, Maybe: 0, No: 0 };
-      const stemPost = { Yes: 0, Maybe: 0, No: 0 };
-
-      data.forEach(row => {
-        const race = simplifyRace(row['Race/Ethnicity']);
-        raceCounts[race] = (raceCounts[race] || 0) + 1;
-
-        const preStem = normalizeResponse(row['Pre-Considering STEM']);
-        const postStem = normalizeResponse(row['Post-Considering STEM']);
-        const preSports = normalizeResponse(row['Pre-Considering Sports']);
-        const postSports = normalizeResponse(row['Post Considering Sports']);
-
-        let stemStatus = 'No change';
-        if ((preStem === 'No' && postStem !== 'No') || (preStem === 'Maybe' && postStem === 'Yes'))
-          stemStatus = 'Increased';
-        else if ((preStem === 'Yes' && postStem !== 'Yes') || (preStem === 'Maybe' && postStem === 'No'))
-          stemStatus = 'Decreased';
-        stemChange[stemStatus]++;
-
-        let sportsStatus = 'No change';
-        if ((preSports === 'No' && postSports !== 'No') || (preSports === 'Maybe' && postSports === 'Yes'))
-          sportsStatus = 'Increased';
-        else if ((preSports === 'Yes' && postSports !== 'Yes') || (preSports === 'Maybe' && postSports === 'No'))
-          sportsStatus = 'Decreased';
-        sportsChange[sportsStatus]++;
-
-        if (stemPre[preStem] !== undefined) stemPre[preStem]++;
-        if (stemPost[postStem] !== undefined) stemPost[postStem]++;
-      });
-
-      new Chart(document.getElementById('raceChart'), {
-        type: 'doughnut',
-        data: {
-          labels: Object.keys(raceCounts),
-          datasets: [{
-            data: Object.values(raceCounts),
-            backgroundColor: ['#3b82f6','#f97316','#10b981','#eab308','#6366f1','#ec4899']
-          }]
-        },
-        options: {
-          plugins: { title: { display: true, text: 'Race/Ethnicity Breakdown' } }
+    <script>
+        // Global variables to store charts
+        let charts = {};
+        
+        // Utility function to simplify race categories
+        function simplifyRace(race) {
+            if (!race || race === '') return 'Not specified';
+            if (race.includes('Black or African American')) return 'Black/African American';
+            if (race.includes('Hispanic or Latino')) return 'Hispanic/Latino';
+            if (race.includes('Asian')) return 'Asian';
+            if (race.includes('White')) return 'White';
+            if (race.includes('Two or More Races')) return 'Multiracial';
+            if (race.includes('Native Hawaiian')) return 'Pacific Islander';
+            return 'Other';
         }
-      });
-
-      new Chart(document.getElementById('stemChangeChart'), {
-        type: 'bar',
-        data: {
-          labels: Object.keys(stemChange),
-          datasets: [{ label: 'STEM Interest', data: Object.values(stemChange), backgroundColor: '#3b82f6' }]
-        },
-        options: {
-          plugins: { title: { display: true, text: 'Change in STEM Interest' } }
+        
+        // Function to count occurrences
+        function countBy(array, key) {
+            return array.reduce((acc, item) => {
+                const value = typeof key === 'function' ? key(item) : item[key];
+                acc[value] = (acc[value] || 0) + 1;
+                return acc;
+            }, {});
         }
-      });
-
-      new Chart(document.getElementById('sportsChangeChart'), {
-        type: 'bar',
-        data: {
-          labels: Object.keys(sportsChange),
-          datasets: [{ label: 'Sports Interest', data: Object.values(sportsChange), backgroundColor: '#f97316' }]
-        },
-        options: {
-          plugins: { title: { display: true, text: 'Change in Sports Interest' } }
+        
+        // Load and process data
+        async function loadData() {
+            try {
+                // Load CSV from data folder
+                const response = await fetch('data/STEMIdentity.csv');
+                if (!response.ok) {
+                    throw new Error(`Failed to load data: ${response.status} - Make sure 'data/STEMIdentity.csv' exists in your repository`);
+                }
+                const csvText = await response.text();
+                
+                // Parse CSV
+                const parseResult = Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    transformHeader: (header) => header.trim()
+                });
+                
+                if (parseResult.errors.length > 0) {
+                    console.error('Parse errors:', parseResult.errors);
+                }
+                
+                // Process data
+                const rawData = parseResult.data;
+                const processedData = rawData.map(row => {
+                    // Clean values and standardize responses
+                    const cleanRow = {};
+                    Object.keys(row).forEach(key => {
+                        let value = row[key];
+                        if (typeof value === 'string') {
+                            value = value.trim();
+                            const lowerValue = value.toLowerCase();
+                            if (lowerValue === 'yes') value = 'Yes';
+                            else if (lowerValue === 'no') value = 'No';
+                            else if (lowerValue === 'maybe') value = 'Maybe';
+                        }
+                        cleanRow[key] = value;
+                    });
+                    
+                    // Calculate STEM interest change
+                    const preStem = cleanRow['Pre-Considering STEM'];
+                    const postStem = cleanRow['Post-Considering STEM'];
+                    let stemChange = 'No change';
+                    
+                    if (preStem === 'No' && (postStem === 'Maybe' || postStem === 'Yes')) stemChange = 'Increased';
+                    else if (preStem === 'Maybe' && postStem === 'Yes') stemChange = 'Increased';
+                    else if (preStem === 'Yes' && (postStem === 'Maybe' || postStem === 'No')) stemChange = 'Decreased';
+                    else if (preStem === 'Maybe' && postStem === 'No') stemChange = 'Decreased';
+                    
+                    // Calculate Sports interest change
+                    const preSports = cleanRow['Pre-Considering Sports'];
+                    const postSports = cleanRow['Post Considering Sports'];
+                    let sportsChange = 'No change';
+                    
+                    if (preSports === 'No' && (postSports === 'Maybe' || postSports === 'Yes')) sportsChange = 'Increased';
+                    else if (preSports === 'Maybe' && postSports === 'Yes') sportsChange = 'Increased';
+                    else if (preSports === 'Yes' && (postSports === 'Maybe' || postSports === 'No')) sportsChange = 'Decreased';
+                    else if (preSports === 'Maybe' && postSports === 'No') sportsChange = 'Decreased';
+                    
+                    return {
+                        id: cleanRow['ID'],
+                        race: cleanRow['Race/Ethnicity'] || 'Not specified',
+                        raceSimplified: simplifyRace(cleanRow['Race/Ethnicity']),
+                        gender: cleanRow['Gender'],
+                        preStem: preStem,
+                        postStem: postStem,
+                        preSports: preSports,
+                        postSports: postSports,
+                        stemChange: stemChange,
+                        sportsChange: sportsChange
+                    };
+                }).filter(row => row.id && row.id.trim() !== '');
+                
+                console.log('Processed data:', processedData);
+                
+                // Hide loading and show dashboard
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                
+                // Render dashboard
+                renderDashboard(processedData);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').innerHTML = `
+                    <h2>Error Loading Data</h2>
+                    <p>${error.message}</p>
+                    <p>Make sure you have:</p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Created a 'data' folder in your repository</li>
+                        <li>Uploaded 'STEMIdentity.csv' to the data folder</li>
+                        <li>Waited 5-10 minutes for GitHub Pages to deploy</li>
+                    </ul>
+                `;
+            }
         }
-      });
-
-      new Chart(document.getElementById('stemPrePostChart'), {
-        type: 'bar',
-        data: {
-          labels: Object.keys(stemPre),
-          datasets: [
-            { label: 'Pre-Program', data: Object.values(stemPre), backgroundColor: '#6366f1' },
-            { label: 'Post-Program', data: Object.values(stemPost), backgroundColor: '#10b981' }
-          ]
-        },
-        options: {
-          plugins: { title: { display: true, text: 'STEM Interest: Before vs After' } }
+        
+        function renderDashboard(data) {
+            const totalParticipants = data.length;
+            
+            // Calculate statistics
+            const genderCounts = countBy(data, 'gender');
+            const raceCounts = countBy(data, 'raceSimplified');
+            const stemChanges = countBy(data, 'stemChange');
+            const sportsChanges = countBy(data, 'sportsChange');
+            
+            // Update summary stats
+            document.getElementById('totalParticipants').textContent = totalParticipants;
+            document.getElementById('stemIncreased').textContent = stemChanges.Increased || 0;
+            document.getElementById('stemPercentage').textContent = 
+                `${(((stemChanges.Increased || 0) / totalParticipants) * 100).toFixed(1)}% of participants`;
+            document.getElementById('sportsIncreased').textContent = sportsChanges.Increased || 0;
+            document.getElementById('sportsPercentage').textContent = 
+                `${(((sportsChanges.Increased || 0) / totalParticipants) * 100).toFixed(1)}% of participants`;
+            document.getElementById('genderSplit').textContent = 
+                `${genderCounts.Male || 0}M / ${genderCounts.Female || 0}F`;
+            document.getElementById('genderPercentage').textContent = 
+                `${(((genderCounts.Male || 0) / totalParticipants) * 100).toFixed(1)}% Male`;
+            
+            // Create charts
+            createDemographicsChart(raceCounts, totalParticipants);
+            createChangesChart(stemChanges, sportsChanges);
+            createStemByRaceChart(data, raceCounts);
+            createPrePostChart(data);
+            
+            // Update insights
+            updateInsights(data, stemChanges, sportsChanges, raceCounts, totalParticipants);
+            
+            // Update debug info
+            updateDebugInfo(data, stemChanges, sportsChanges);
         }
-      });
-    }
-
-    // Load CSV from /data/ path
-    Papa.parse('/data/SOTC SLUSD Data - STEM Identity .csv', {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) {
-        renderDashboard(results.data);
-      }
-    });
-  </script>
+        
+        function createDemographicsChart(raceCounts, totalParticipants) {
+            const ctx = document.getElementById('demographicsChart').getContext('2d');
+            const labels = Object.keys(raceCounts);
+            const data = Object.values(raceCounts);
+            const percentages = data.map(count => ((count / totalParticipants) * 100).toFixed(1));
+            
+            charts.demographics = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels.map((label, i) => `${label}: ${percentages[i]}%`),
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            '#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1', '#d084d0'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createChangesChart(stemChanges, sportsChanges) {
+            const ctx = document.getElementById('changesChart').getContext('2d');
+            
+            charts.changes = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['STEM Interest', 'Sports Interest'],
+                    datasets: [
+                        {
+                            label: 'Increased',
+                            data: [stemChanges.Increased || 0, sportsChanges.Increased || 0],
+                            backgroundColor: '#82ca9d'
+                        },
+                        {
+                            label: 'No Change',
+                            data: [stemChanges['No change'] || 0, sportsChanges['No change'] || 0],
+                            backgroundColor: '#8884d8'
+                        },
+                        {
+                            label: 'Decreased',
+                            data: [stemChanges.Decreased || 0, sportsChanges.Decreased || 0],
+                            backgroundColor: '#ff7c7c'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true }
+                    }
+                }
+            });
+        }
+        
+        function createStemByRaceChart(data, raceCounts) {
+            const ctx = document.getElementById('stemByRaceChart').getContext('2d');
+            
+            const raceLabels = Object.keys(raceCounts);
+            const increasedData = raceLabels.map(race => 
+                data.filter(d => d.raceSimplified === race && d.stemChange === 'Increased').length
+            );
+            const noChangeData = raceLabels.map(race => 
+                data.filter(d => d.raceSimplified === race && d.stemChange === 'No change').length
+            );
+            const decreasedData = raceLabels.map(race => 
+                data.filter(d => d.raceSimplified === race && d.stemChange === 'Decreased').length
+            );
+            
+            charts.stemByRace = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: raceLabels,
+                    datasets: [
+                        {
+                            label: 'Increased',
+                            data: increasedData,
+                            backgroundColor: '#82ca9d'
+                        },
+                        {
+                            label: 'No Change',
+                            data: noChangeData,
+                            backgroundColor: '#8884d8'
+                        },
+                        {
+                            label: 'Decreased',
+                            data: decreasedData,
+                            backgroundColor: '#ff7c7c'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createPrePostChart(data) {
+            const ctx = document.getElementById('prePostChart').getContext('2d');
+            
+            const preYes = data.filter(d => d.preStem === 'Yes').length;
+            const postYes = data.filter(d => d.postStem === 'Yes').length;
+            const preMaybe = data.filter(d => d.preStem === 'Maybe').length;
+            const postMaybe = data.filter(d => d.postStem === 'Maybe').length;
+            const preNo = data.filter(d => d.preStem === 'No').length;
+            const postNo = data.filter(d => d.postStem === 'No').length;
+            
+            charts.prePost = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['STEM Yes', 'STEM Maybe', 'STEM No'],
+                    datasets: [
+                        {
+                            label: 'Before Program',
+                            data: [preYes, preMaybe, preNo],
+                            backgroundColor: '#8884d8'
+                        },
+                        {
+                            label: 'After Program',
+                            data: [postYes, postMaybe, postNo],
+                            backgroundColor: '#82ca9d'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+        
+        function updateInsights(data, stemChanges, sportsChanges, raceCounts, totalParticipants) {
+            document.getElementById('stemInsight').textContent = 
+                `${(((stemChanges.Increased || 0) / totalParticipants) * 100).toFixed(1)}% of participants increased their interest in STEM after the program.`;
+            
+            document.getElementById('sportsInsight').textContent = 
+                `Sports interest remained largely stable, with ${(((sportsChanges['No change'] || 0) / totalParticipants) * 100).toFixed(1)}% showing no change.`;
+            
+            document.getElementById('demographicsInsight').textContent = 
+                `The program served a diverse population with ${Object.keys(raceCounts).length} different racial/ethnic groups represented.`;
+        }
+        
+        function updateDebugInfo(data, stemChanges, sportsChanges) {
+            document.getElementById('debugInfo').innerHTML = `
+                <p>Total rows processed: ${data.length}</p>
+                <p>STEM increases: ${stemChanges.Increased || 0}</p>
+                <p>Sports increases: ${sportsChanges.Increased || 0}</p>
+                <p>Sample participant: ${data[0] ? `${data[0].id} - ${data[0].gender} - ${data[0].raceSimplified}` : 'None'}</p>
+            `;
+        }
+        
+        // Load data when page loads
+        window.addEventListener('load', loadData);
+    </script>
 </body>
 </html>
