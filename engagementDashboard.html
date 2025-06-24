@@ -543,7 +543,7 @@
                         <div class="${usingRealData ? 'success-message' : 'warning-message'}">
                             ${usingRealData ? 
                                 `✅ Real engagement data loaded successfully! Analyzing ${processedData.length} student records.` :
-                                `⚠️ Dashboard loaded with sample data. Upload 'SOTC SLUSD Data  AfterSchoolEngagement.csv' to see real results.`
+                                `⚠️ Dashboard loaded with sample data. Upload 'data/SOTC SLUSD Data - AfterSchoolEngagement.csv' to see real results.`
                             }
                         </div>
 
@@ -799,7 +799,7 @@
             // Try to load real data
             function tryLoadRealData() {
                 const possiblePaths = [
-                    './data/SOTC SLUSD Data  AfterSchoolEngagement.csv',
+                    './data/SOTC SLUSD Data - AfterSchoolEngagement.csv',
                     'data/SOTC SLUSD Data  AfterSchoolEngagement.csv',
                     './SOTC SLUSD Data  AfterSchoolEngagement.csv'
                 ];
