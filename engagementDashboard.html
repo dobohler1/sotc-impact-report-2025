@@ -66,9 +66,6 @@
             gap: 20px;
             margin-bottom: 30px;
         }
-        .grid-4 {
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        }
         .grid-2 {
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
         }
@@ -78,38 +75,11 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .cohort-card {
-            border-left: 4px solid;
-            position: relative;
-        }
         .card-title {
             font-size: 1.2rem;
             font-weight: 600;
             color: #2c3e50;
             margin-bottom: 15px;
-        }
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 0.9rem;
-        }
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-        }
-        .stat-label {
-            color: #7f8c8d;
-        }
-        .stat-value {
-            font-weight: 600;
-        }
-        .stem-value { color: #3b82f6; }
-        .sports-value { color: #10b981; }
-        .chart-container {
-            height: 300px;
-            margin-top: 15px;
         }
         .bar-chart {
             display: flex;
@@ -167,52 +137,21 @@
             height: 12px;
             border-radius: 2px;
         }
-        .skills-matrix {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-top: 15px;
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
         }
-        .matrix-header {
-            display: grid;
-            grid-template-columns: 120px repeat(8, 1fr) 80px 100px;
-            gap: 2px;
-            margin-bottom: 5px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        .matrix-row {
-            display: grid;
-            grid-template-columns: 120px repeat(8, 1fr) 80px 100px;
-            gap: 2px;
-            margin-bottom: 2px;
-            font-size: 0.75rem;
-        }
-        .matrix-cell {
-            padding: 6px 4px;
-            text-align: center;
-            border-radius: 3px;
-            color: white;
-            font-weight: 500;
-        }
-        .matrix-header-cell {
-            padding: 6px 4px;
-            text-align: center;
-            border-radius: 3px;
-            background: #f1f5f9;
-            color: #475569;
-            font-weight: 600;
-        }
-        .id-cell {
-            background: #f8fafc;
-            color: #374151;
-            font-weight: 600;
-            text-align: left;
-            padding-left: 8px;
-        }
-        .archetype-cell {
-            background: #f3f4f6;
-            color: #374151;
-            font-size: 0.7rem;
+        .warning-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffeaa7;
         }
         .insights-grid {
             display: grid;
@@ -236,60 +175,6 @@
             font-size: 0.9rem;
             line-height: 1.5;
         }
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-        }
-        .warning-message {
-            background: #fff3cd;
-            color: #856404;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #ffeaa7;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        .table th, .table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .table th {
-            background: #f9fafb;
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-        .table td {
-            font-size: 0.9rem;
-        }
-        .tier-breakdown {
-            background: #fafbfc;
-            border-radius: 6px;
-            padding: 10px;
-            margin-top: 10px;
-        }
-        .tier-segment {
-            transition: all 0.3s ease;
-        }
-        .tier-segment:hover {
-            opacity: 0.8;
-            transform: translateY(-1px);
-        }
-        .attendance-bar {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
         @media (max-width: 768px) {
             .dashboard {
                 padding: 10px;
@@ -297,23 +182,8 @@
             .title {
                 font-size: 2rem;
             }
-            .grid-4 {
-                grid-template-columns: 1fr;
-            }
             .grid-2 {
                 grid-template-columns: 1fr;
-            }
-            .matrix-header {
-                grid-template-columns: 100px repeat(8, 1fr) 60px 80px;
-            }
-            .matrix-row {
-                grid-template-columns: 100px repeat(8, 1fr) 60px 80px;
-            }
-            .tier-breakdown {
-                font-size: 0.8rem;
-            }
-            .card-title {
-                font-size: 1rem;
             }
         }
     </style>
@@ -348,14 +218,12 @@
 
             // Cohort colors for chronological order
             const cohortColors = {
-                'John Muir Fall 24': '#EF4444',     // Red (oldest)
-                'Bancroft Fall 24': '#F59E0B',      // Orange
-                'Bancroft Spring 25': '#10B981',    // Green
-                'John Muir Spring 25': '#3B82F6'    // Blue (newest)
+                'John Muir Fall 24': '#EF4444',
+                'Bancroft Fall 24': '#F59E0B',
+                'Bancroft Spring 25': '#10B981',
+                'John Muir Spring 25': '#3B82F6'
             };
 
-            // ========== UTILITY FUNCTIONS (DEFINED FIRST) ==========
-            
             // Process data
             function processData(rawData) {
                 return rawData.map(d => {
@@ -380,25 +248,6 @@
                         engagementGap: Math.abs(stemAvg - sportsAvg)
                     };
                 });
-            }
-
-            // Get student archetype
-            function getStudentArchetype(student) {
-                const stemAvg = student.stemAverage || 0;
-                const sportsAvg = student.sportsAverage || 0;
-                const gap = Math.abs(stemAvg - sportsAvg);
-                const overall = (stemAvg + sportsAvg) / 2;
-                
-                if (overall >= 3.5 && gap <= 0.5) return "High Balanced";
-                if (overall >= 3.5 && stemAvg > sportsAvg) return "STEM Champion";
-                if (overall >= 3.5 && sportsAvg > stemAvg) return "Sports Champion";
-                if (gap <= 0.5 && overall >= 2.5) return "Balanced Active";
-                if (stemAvg >= 3.5 && sportsAvg <= 2) return "STEM Specialist";
-                if (sportsAvg >= 3.5 && stemAvg <= 2) return "Sports Specialist";
-                if (overall >= 2.5 && stemAvg > sportsAvg) return "STEM Leaning";
-                if (overall >= 2.5 && sportsAvg > stemAvg) return "Sports Leaning";
-                if (student.stemConfidence <= 2 || student.sportsConfidence <= 2) return "Needs Confidence";
-                return "Developing";
             }
 
             // Calculate cohort statistics
@@ -499,13 +348,6 @@
                 return colors[tierIndex] || '#6b7280';
             }
 
-            // Get color intensity based on score (for skills matrix)
-            function getColorIntensity(score, type = 'stem') {
-                const intensity = Math.min(Math.max(score / 4, 0.2), 1);
-                const baseColor = type === 'stem' ? '59, 130, 246' : '16, 185, 129';
-                return `rgba(${baseColor}, ${intensity})`;
-            }
-
             // Get engagement stats for cohort
             function getEngagementStats(cohortName) {
                 const cohortData = processData(currentData).filter(d => d.cohort === cohortName);
@@ -516,7 +358,6 @@
                 const stemAvg = (cohortData.reduce((sum, d) => sum + d.stemAverage, 0) / cohortData.length).toFixed(1);
                 const sportsAvg = (cohortData.reduce((sum, d) => sum + d.sportsAverage, 0) / cohortData.length).toFixed(1);
                 
-                // Calculate average attendance per student based on tier data
                 const attendanceData = getAttendanceData().find(a => a.name === cohortName);
                 const avgAttendance = attendanceData ? (attendanceData.totalAttendance / attendanceData.participants).toFixed(1) : '0.0';
 
@@ -527,13 +368,34 @@
                 };
             }
 
-            // ========== RENDER FUNCTION ==========
-            
+            // Create radar chart
+            function createRadarChart(stat) {
+                const skills = [
+                    { name: 'STEM Part.', value: parseFloat(stat.avgParticipation.stem) },
+                    { name: 'STEM Conf.', value: parseFloat(stat.avgConfidence.stem) },
+                    { name: 'Sport Part.', value: parseFloat(stat.avgParticipation.sports) },
+                    { name: 'Sport Conf.', value: parseFloat(stat.avgConfidence.sports) }
+                ];
+
+                return `
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.9rem; color: #4b5563; margin-bottom: 10px;">Skills Profile</div>
+                        ${skills.map(skill => `
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem;">
+                                <span>${skill.name}:</span>
+                                <span style="font-weight: 600; color: ${skill.name.includes('STEM') ? '#3b82f6' : '#10b981'};">
+                                    ${skill.value.toFixed(1)}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            // Render function
             function render() {
                 const processedData = processData(currentData);
                 const cohortStats = calculateCohortStats(processedData);
-                const filteredData = selectedCohort === 'all' ? processedData : processedData.filter(d => d.cohort === selectedCohort);
-                
                 const cohorts = [...new Set(processedData.map(d => d.cohort))];
 
                 const root = document.getElementById('dashboard-root');
@@ -542,8 +404,8 @@
                     <div class="dashboard">
                         <div class="${usingRealData ? 'success-message' : 'warning-message'}">
                             ${usingRealData ? 
-                                `✅ Real engagement data loaded successfully! Analyzing ${processedData.length} student records.` :
-                                `⚠️ Dashboard loaded with sample data. Upload 'data/SOTC SLUSD Data - AfterSchoolEngagement.csv' to see real results.`
+                                'Real engagement data loaded successfully!' :
+                                'Dashboard loaded with sample data. Upload CSV to see real results.'
                             }
                         </div>
 
@@ -582,37 +444,18 @@
                                         <div style="font-size: 0.9rem; font-weight: 600; color: #374151; margin-bottom: 8px;">Attendance Distribution</div>
                                         <div style="display: flex; height: 20px; border-radius: 10px; overflow: hidden; background: #f3f4f6;">
                                             ${cohort.tiers.map((tier, index) => `
-                                                <div style="background: ${getTierColor(index)}; width: ${tier.percentage}%; height: 100%; position: relative;" 
+                                                <div style="background: ${getTierColor(index)}; width: ${tier.percentage}%; height: 100%;" 
                                                      title="Tier ${index + 1}: ${tier.percentage}% (${tier.count} students)">
                                                 </div>
                                             `).join('')}
                                         </div>
                                         <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.7rem; color: #6b7280;">
                                             <span>Tier 1 (≤10%)</span>
-                                            <span>Tier 2 (11-25%)</span>
-                                            <span>Tier 3 (26-49%)</span>
-                                            <span>Tier 4 (50-74%)</span>
                                             <span>Tier 5 (≥75%)</span>
                                         </div>
                                     </div>
 
-                                    <!-- Detailed Tier Breakdown -->
-                                    <div class="tier-breakdown">
-                                        ${cohort.tiers.map((tier, index) => `
-                                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #f3f4f6;">
-                                                <div style="display: flex; align-items: center;">
-                                                    <div style="width: 12px; height: 12px; background: ${getTierColor(index)}; border-radius: 2px; margin-right: 8px;"></div>
-                                                    <span style="font-size: 0.8rem; color: #374151;">Tier ${index + 1}</span>
-                                                </div>
-                                                <div style="text-align: right;">
-                                                    <span style="font-weight: 600; color: #1f2937; font-size: 0.9rem;">${tier.count}</span>
-                                                    <span style="color: #6b7280; font-size: 0.8rem; margin-left: 4px;">(${tier.percentage}%)</span>
-                                                </div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-
-                                    <!-- Average Engagement Quick Stats -->
+                                    <!-- Quick Stats -->
                                     <div style="display: flex; justify-content: space-around; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
                                         <div style="text-align: center;">
                                             <div style="font-size: 1.1rem; font-weight: 600; color: #3b82f6;">${getEngagementStats(cohort.name).stemAvg}</div>
@@ -622,10 +465,6 @@
                                             <div style="font-size: 1.1rem; font-weight: 600; color: #10b981;">${getEngagementStats(cohort.name).sportsAvg}</div>
                                             <div style="font-size: 0.7rem; color: #6b7280;">Sports Avg</div>
                                         </div>
-                                        <div style="text-align: center;">
-                                            <div style="font-size: 1.1rem; font-weight: 600; color: #8b5cf6;">${getEngagementStats(cohort.name).avgAttendancePerStudent}</div>
-                                            <div style="font-size: 0.7rem; color: #6b7280;">Avg Attendance</div>
-                                        </div>
                                     </div>
                                 </div>
                             `).join('')}
@@ -633,20 +472,28 @@
 
                         <!-- Charts Grid -->
                         <div class="grid grid-2">
-                            <!-- STEM vs Sports Comparison Chart -->
+                            <!-- Engagement Trends -->
                             <div class="card">
-                                <h3 class="card-title">STEM vs Sports Engagement by Cohort</h3>
-                                <p style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;">Chronological order: Fall 24 → Spring 25</p>
+                                <h3 class="card-title">Engagement Evolution: Fall to Spring</h3>
+                                <p style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;">
+                                    How STEM vs Sports preferences changed over time
+                                </p>
                                 <div class="legend">
                                     <div class="legend-item">
                                         <div class="legend-color stem-bar"></div>
-                                        <span>STEM</span>
+                                        <span>STEM Average</span>
                                     </div>
                                     <div class="legend-item">
                                         <div class="legend-color sports-bar"></div>
-                                        <span>Sports</span>
+                                        <span>Sports Average</span>
                                     </div>
                                 </div>
+                                
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem;">
+                                    <strong>Key Trends:</strong> John Muir STEM declined from 3.0 → 2.4, while Sports engagement remained stable. 
+                                    Spring cohorts show more balanced engagement patterns.
+                                </div>
+
                                 <div class="bar-chart">
                                     ${cohortStats.map(stat => `
                                         <div class="bar-group">
@@ -664,88 +511,21 @@
                                 </div>
                             </div>
 
-                            <!-- Skills Matrix -->
+                            <!-- Skills Profiles -->
                             <div class="card">
-                                <h3 class="card-title">Individual Student Skills Matrix</h3>
+                                <h3 class="card-title">Detailed Skills Profiles by Cohort</h3>
                                 <p style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;">
-                                    Color intensity shows performance level (darker = higher scores)
+                                    Individual metrics for participation and confidence
                                 </p>
-                                <div class="skills-matrix">
-                                    <div class="matrix-header">
-                                        <div class="matrix-header-cell">Student ID</div>
-                                        <div class="matrix-header-cell">STEM Part.</div>
-                                        <div class="matrix-header-cell">STEM Team</div>
-                                        <div class="matrix-header-cell">STEM Task</div>
-                                        <div class="matrix-header-cell">STEM Conf.</div>
-                                        <div class="matrix-header-cell">Sport Part.</div>
-                                        <div class="matrix-header-cell">Sport Team</div>
-                                        <div class="matrix-header-cell">Sport Task</div>
-                                        <div class="matrix-header-cell">Sport Conf.</div>
-                                        <div class="matrix-header-cell">Cohort</div>
-                                        <div class="matrix-header-cell">Type</div>
-                                    </div>
-                                    ${filteredData.slice(0, 15).map(student => {
-                                        const archetype = getStudentArchetype(student);
-                                        return `
-                                            <div class="matrix-row">
-                                                <div class="matrix-cell id-cell">${student.id}</div>
-                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.stemParticipation, 'stem')}">${student.stemParticipation}</div>
-                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.stemTeamwork, 'stem')}">${student.stemTeamwork}</div>
-                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.stemTaskCompletion, 'stem')}">${student.stemTaskCompletion}</div>
-                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.stemConfidence, 'stem')}">${student.stemConfidence}</div>
-                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.sportsParticipation, 'sports')}">${student.sportsParticipation}</div>
-                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.sportsTeamwork, 'sports')}">${student.sportsTeamwork}</div>
-                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.sportsTaskCompletion, 'sports')}">${student.sportsTaskCompletion}</div>
-                                                <div class="matrix-cell" style="background-color: ${getColorIntensity(student.sportsConfidence, 'sports')}">${student.sportsConfidence}</div>
-                                                <div class="matrix-cell archetype-cell">${student.cohort.split(' ').slice(-2).join(' ')}</div>
-                                                <div class="matrix-cell archetype-cell">${archetype.split(' ')[0]}</div>
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                    ${filteredData.length > 15 ? `
-                                        <div style="text-align: center; padding: 15px; color: #7f8c8d; font-size: 0.9rem;">
-                                            Showing first 15 students. Use cohort filter to see specific groups.
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    ${cohortStats.map(stat => `
+                                        <div>
+                                            <h4 style="color: #2c3e50; margin-bottom: 10px; font-size: 1rem;">${stat.cohort}</h4>
+                                            ${createRadarChart(stat)}
                                         </div>
-                                    ` : ''}
+                                    `).join('')}
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Detailed Analysis Table -->
-                        <div class="card">
-                            <h3 class="card-title">Detailed Engagement Metrics by Cohort</h3>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Cohort</th>
-                                        <th>Students</th>
-                                        <th>STEM Avg</th>
-                                        <th>Sports Avg</th>
-                                        <th>STEM Focused</th>
-                                        <th>Sports Focused</th>
-                                        <th>STEM Participation</th>
-                                        <th>Sports Participation</th>
-                                        <th>STEM Confidence</th>
-                                        <th>Sports Confidence</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${cohortStats.map((stat, index) => `
-                                        <tr style="background-color: ${index % 2 === 0 ? 'white' : '#f9fafb'};">
-                                            <td style="font-weight: 600;">${stat.cohort}</td>
-                                            <td>${stat.size}</td>
-                                            <td style="color: #3b82f6; font-weight: 600;">${stat.avgStem}</td>
-                                            <td style="color: #10b981; font-weight: 600;">${stat.avgSports}</td>
-                                            <td>${stat.stemDominant}</td>
-                                            <td>${stat.sportsDominant}</td>
-                                            <td style="color: #3b82f6;">${stat.avgParticipation.stem}</td>
-                                            <td style="color: #10b981;">${stat.avgParticipation.sports}</td>
-                                            <td style="color: #3b82f6;">${stat.avgConfidence.stem}</td>
-                                            <td style="color: #10b981;">${stat.avgConfidence.sports}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
                         </div>
 
                         <!-- Key Insights -->
@@ -755,29 +535,29 @@
                                 <div class="insight-card">
                                     <div class="insight-title">🏆 Attendance & STEM Correlation</div>
                                     <div class="insight-text">
-                                        <strong>John Muir Spring 25</strong> shows both highest STEM engagement and strong Tier 5 attendance (52%), 
+                                        John Muir Spring 25 shows both highest STEM engagement and strong Tier 5 attendance (52%), 
                                         suggesting a positive correlation between attendance and STEM performance.
                                     </div>
                                 </div>
                                 <div class="insight-card">
                                     <div class="insight-title">🎯 Balanced Engagement Patterns</div>
                                     <div class="insight-text">
-                                        <strong>Bancroft Spring 25</strong> demonstrates balanced participation with concentrated Tier 4 attendance (65%), 
+                                        Bancroft Spring 25 demonstrates balanced participation with concentrated Tier 4 attendance (65%), 
                                         indicating consistent moderate engagement across both STEM and sports.
                                     </div>
                                 </div>
                                 <div class="insight-card">
-                                    <div class="insight-title">📊 Retention Evolution</div>
+                                    <div class="insight-title">📊 Program Evolution</div>
                                     <div class="insight-text">
-                                        Comparing Fall to Spring cohorts shows <strong>improved attendance consistency</strong>, 
+                                        Comparing Fall to Spring cohorts shows improved attendance consistency, 
                                         with Spring cohorts having fewer Tier 1 (low attendance) students.
                                     </div>
                                 </div>
                                 <div class="insight-card">
-                                    <div class="insight-title">📈 Program Optimization</div>
+                                    <div class="insight-title">📈 Confidence Development</div>
                                     <div class="insight-text">
-                                        <strong>John Muir Fall 24</strong> had excellent Tier 5 retention (64%) but lower total attendance, 
-                                        suggesting strategies from Spring 25 could improve overall participation.
+                                        Confidence scores consistently lag behind participation across all cohorts, 
+                                        suggesting targeted confidence-building could boost overall engagement.
                                     </div>
                                 </div>
                             </div>
@@ -786,22 +566,17 @@
                 `;
             }
 
-            // ========== EVENT HANDLERS ==========
-            
-            // Global event handlers
+            // Event handlers
             window.handleCohortChange = function(cohort) {
                 selectedCohort = cohort;
                 render();
             };
 
-            // ========== DATA LOADING ==========
-            
             // Try to load real data
             function tryLoadRealData() {
                 const possiblePaths = [
-                    './data/SOTC SLUSD Data - AfterSchoolEngagement.csv',
-                    'data/SOTC SLUSD Data  AfterSchoolEngagement.csv',
-                    './SOTC SLUSD Data  AfterSchoolEngagement.csv'
+                    './data/SOTC SLUSD Data  AfterSchoolEngagement.csv',
+                    'data/SOTC SLUSD Data  AfterSchoolEngagement.csv'
                 ];
 
                 Promise.all(possiblePaths.map(path => 
@@ -813,7 +588,6 @@
                     if (csvContent) {
                         console.log("Real engagement data loaded successfully!");
                         
-                        // Parse CSV manually
                         const lines = csvContent.trim().split('\n');
                         const dataLines = lines.slice(1).filter(line => 
                             line.includes('John Muir') || line.includes('Bancroft')
@@ -859,8 +633,6 @@
             tryLoadRealData();
         }
 
-        // ========== INITIALIZATION ==========
-        
         // Start the dashboard
         try {
             console.log("Initializing engagement dashboard...");
