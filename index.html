@@ -1364,10 +1364,10 @@
             
             // Load all CSV files
             const [performanceData, engagementData, stemIdentityData, evaluationData] = await Promise.all([
-                loadCSVData('/data/SOTC SLUSD Data - Academic Performance.csv'),
-                loadCSVData('/data/SOTC SLUSD Data - AfterSchoolEngagement.csv'),
-                loadCSVData('/data/SOTC SLUSD Data - STEM Identity .csv'),
-                loadCSVData('/data/studentEvaluations.csv')
+                loadCSVData('data/SOTC SLUSD Data - Academic Performance.csv'),
+                loadCSVData('data/SOTC SLUSD Data - AfterSchoolEngagement.csv'),
+                loadCSVData('data/SOTC SLUSD Data - STEM Identity .csv'),
+                loadCSVData('data/studentEvaluations.csv')
             ]);
             
             // Store loaded data
