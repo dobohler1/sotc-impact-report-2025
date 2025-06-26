@@ -231,6 +231,296 @@
             color: #2c3e50;
         }
 
+
+<!-- ADD THIS CSS TO YOUR <style> SECTION -->
+<style>
+/* Enhanced Guest Speakers Styles */
+.speakers-section {
+    position: relative;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    overflow: hidden;
+}
+
+.speakers-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="speakers-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="%23cbd5e1" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23speakers-grid)"/></svg>');
+    opacity: 0.5;
+}
+
+.speakers-container {
+    position: relative;
+    z-index: 1;
+}
+
+.speakers-title {
+    color: #1a202c;
+    font-size: 3rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.speakers-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #4a5568;
+    margin-bottom: 50px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.speakers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+.speaker-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.8);
+}
+
+.speaker-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+}
+
+.featured-speaker {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.speaker-image-container {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.featured-speaker .speaker-image-container {
+    height: 100%;
+}
+
+.speaker-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s ease;
+    filter: brightness(1.1) contrast(1.1);
+}
+
+.speaker-card:hover .speaker-photo {
+    transform: scale(1.1);
+}
+
+.speaker-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.6) 0%, transparent 50%);
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.speaker-badge {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.speaker-content {
+    padding: 30px;
+}
+
+.featured-speaker .speaker-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.speaker-header {
+    margin-bottom: 15px;
+}
+
+.speaker-name {
+    font-size: 1.5rem;
+    color: #1a202c;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.speaker-expertise {
+    font-size: 1rem;
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.speaker-credentials {
+    color: #718096;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.speaker-bio {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.speaker-bio em {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.speaker-quote {
+    background: linear-gradient(135deg, #f7fafc, #edf2f7);
+    padding: 20px;
+    border-radius: 15px;
+    border-left: 4px solid #667eea;
+    position: relative;
+    margin-top: auto;
+}
+
+.quote-icon {
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    font-size: 3rem;
+    color: #667eea;
+    opacity: 0.3;
+    font-family: Georgia, serif;
+}
+
+.speaker-quote p {
+    font-style: italic;
+    color: #2d3748;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* Impact Statistics */
+.speakers-impact {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 30px;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-top: 40px;
+}
+
+.impact-stat {
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    transition: transform 0.3s ease;
+}
+
+.impact-stat:hover {
+    transform: translateY(-5px);
+}
+
+.impact-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #667eea;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.impact-label {
+    color: #4a5568;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .featured-speaker {
+        grid-column: span 1;
+        grid-template-columns: 1fr;
+        max-width: none;
+    }
+    
+    .speakers-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .speakers-title {
+        font-size: 2.2rem;
+    }
+    
+    .speakers-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .speaker-content {
+        padding: 25px;
+    }
+    
+    .speaker-image-container {
+        height: 200px;
+    }
+    
+    .speakers-impact {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 30px;
+        gap: 20px;
+    }
+    
+    .impact-number {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .speakers-impact {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+
+
+        
         /* Dashboard Section */
         .dashboard-container {
             background: white;
@@ -414,6 +704,7 @@
             <ul class="nav-list">
                 <li class="nav-item"><a href="#story" class="nav-link">Program Story</a></li>
                 <li class="nav-item"><a href="#videos" class="nav-link">Student Voices</a></li>
+                <li class="nav-item"><a href="#speakers" class="nav-link">Guest Speakers</a></li>
                 <li class="nav-item"><a href="#data" class="nav-link">Data & Analytics</a></li>
                 <li class="nav-item"><a href="#engagement" class="nav-link">Engagement Analysis</a></li>
                 <li class="nav-item"><a href="#findings" class="nav-link">Key Findings</a></li>
@@ -505,7 +796,149 @@
             </div>
         </section>
 
-  
+        <!-- Guest Speakers Section -->
+        <section id="speakers" class="section speakers-section">
+            <div class="speakers-background"></div>
+            <div class="speakers-container">
+                <h2 class="section-title speakers-title">Guest Speakers & Industry Experts</h2>
+                <p class="speakers-subtitle">
+                    World-class professionals who inspired our students with real-world STEM applications and life wisdom
+                </p>
+                
+                <div class="speakers-grid">
+                    
+                    <div class="speaker-card featured-speaker">
+                        <div class="speaker-image-container">
+                            <img src="photos/hakeem-oluseyi.jpg" alt="Dr. Hakeem Oluseyi" class="speaker-photo">
+                            <div class="speaker-overlay">
+                                <div class="speaker-badge">Keynote Speaker</div>
+                            </div>
+                        </div>
+                        <div class="speaker-content">
+                            <div class="speaker-header">
+                                <h3 class="speaker-name">Dr. Hakeem Oluseyi</h3>
+                                <div class="speaker-expertise">🌟 Astrophysicist</div>
+                            </div>
+                            <p class="speaker-credentials">
+                                President, National Society of Black Physicists • CEO, Astronomical Society of the Pacific
+                            </p>
+                            <p class="speaker-bio">
+                                Author of <em>A Quantum Life: My Unlikely Journey from the Street to the Stars</em>, Dr. Oluseyi 
+                                showed students how the curiosity-driven mindset of astrophysics parallels athletic performance—reading 
+                                plays on the court is like mapping the cosmos.
+                            </p>
+                            <div class="speaker-quote">
+                                <div class="quote-icon">"</div>
+                                <p>When I'm tracking a photon crossing galaxies or anticipating a teammate's move mid‑court, 
+                                I'm using the same scientific toolkit—observe closely, predict outcomes, adjust in real time.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="speaker-card">
+                        <div class="speaker-image-container">
+                            <img src="photos/james-allen.jpg" alt="Dr. James Allen" class="speaker-photo">
+                            <div class="speaker-overlay">
+                                <div class="speaker-badge">Research Scientist</div>
+                            </div>
+                        </div>
+                        <div class="speaker-content">
+                            <div class="speaker-header">
+                                <h3 class="speaker-name">Dr. James Allen</h3>
+                                <div class="speaker-expertise">⚛️ Accelerator Physics</div>
+                            </div>
+                            <p class="speaker-credentials">
+                                Stanford PhD • Former Varsity Basketball Player • Varian Research Scientist
+                            </p>
+                            <p class="speaker-bio">
+                                A living example that you can excel in both athletics and academia, Dr. Allen broke down how 
+                                particle accelerators help treat cancer and how court discipline translates to research success.
+                            </p>
+                            <div class="speaker-quote">
+                                <div class="quote-icon">"</div>
+                                <p>I wanted students to see that you can be both an athlete and a scientist. The same focus 
+                                that helps you train can help you thrive in college and beyond.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="speaker-card">
+                        <div class="speaker-image-container">
+                            <img src="photos/jareem-gunter.jpg" alt="Jareem Gunter" class="speaker-photo">
+                            <div class="speaker-overlay">
+                                <div class="speaker-badge">2025 Coach of the Year</div>
+                            </div>
+                        </div>
+                        <div class="speaker-content">
+                            <div class="speaker-header">
+                                <h3 class="speaker-name">Jareem Gunter</h3>
+                                <div class="speaker-expertise">🏀 Leadership Coach</div>
+                            </div>
+                            <p class="speaker-credentials">
+                                Author of <em>The Man Book</em> • Positive Coaching Alliance 2025 Coach of the Year • Dream Team AAU
+                            </p>
+                            <p class="speaker-bio">
+                                Led a transformative workshop on evaluating relationships and personal influences, helping students 
+                                reflect on whether their circle supports their goals and ambitions.
+                            </p>
+                            <div class="speaker-quote">
+                                <div class="quote-icon">"</div>
+                                <p>Your circle shapes your future. I showed students how to check if their relationships 
+                                are building them up or holding them back.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="speaker-card">
+                        <div class="speaker-image-container">
+                            <img src="photos/phil-robinson.jpg" alt="Phil Robinson" class="speaker-photo">
+                            <div class="speaker-overlay">
+                                <div class="speaker-badge">Creative Mentor</div>
+                            </div>
+                        </div>
+                        <div class="speaker-content">
+                            <div class="speaker-header">
+                                <h3 class="speaker-name">Phil Robinson</h3>
+                                <div class="speaker-expertise">🎬 Filmmaker & Referee</div>
+                            </div>
+                            <p class="speaker-credentials">
+                                Morehouse Graduate • Creative Storyteller • STEM Enthusiast
+                            </p>
+                            <p class="speaker-bio">
+                                As both guest instructor and referee, Phil encouraged students to pursue excellence while staying 
+                                creative, having fun, and making a positive impact in their community.
+                            </p>
+                            <div class="speaker-quote">
+                                <div class="quote-icon">"</div>
+                                <p>Curiosity is your superpower. The more you explore, the more you'll discover who you 
+                                really are—and what you're capable of.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+        
+                <!-- Impact Statistics -->
+                <div class="speakers-impact">
+                    <div class="impact-stat">
+                        <div class="impact-number">4</div>
+                        <div class="impact-label">Industry Experts</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">87</div>
+                        <div class="impact-label">Students Inspired</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">6</div>
+                        <div class="impact-label">Interactive Sessions</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">100%</div>
+                        <div class="impact-label">Positive Feedback</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Data Dashboard Section -->
         <section id="data" class="section">
