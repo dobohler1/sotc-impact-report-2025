@@ -1546,62 +1546,76 @@
             updateCohortCards(radarData.cohortStats);
         }
 
-        function generateRadarData(performanceResults, engagementData) {
-            const cohorts = performanceResults ? performanceResults.cohorts : sampleData.cohorts;
-            const mathGains = performanceResults ? performanceResults.mathGains : sampleData.mathGains;
-            const csGains = performanceResults ? performanceResults.csGains : sampleData.csGains;
-            
-            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ec4899'];
-            const datasets = [];
-            const cohortStats = {};
-            
-            cohorts.forEach((cohort, index) => {
-                // Calculate engagement scores for this cohort
-                let stemEngagement = 75; // default
-                let sportsEngagement = 80; // default
-                let attendanceScore = 80; // default
-                
-                if (engagementData && engagementData[cohort]) {
-                    const cohortData = engagementData[cohort];
-                    stemEngagement = (cohortData.reduce((sum, d) => sum + d.stemScore, 0) / cohortData.length) * 25;
-                    sportsEngagement = (cohortData.reduce((sum, d) => sum + d.sportsScore, 0) / cohortData.length) * 25;
-                    attendanceScore = (cohortData.reduce((sum, d) => sum + d.overallScore, 0) / cohortData.length) * 25;
-                }
-                
-                const dataPoint = [
-                    mathGains[index] || 0,
-                    csGains[index] || 0,
-                    attendanceScore,
-                    95, // satisfaction (default)
-                    stemEngagement,
-                    sportsEngagement
-                ];
-                
-                cohortStats[cohort] = {
-                    math: mathGains[index] || 0,
-                    cs: csGains[index] || 0,
-                    stemInterest: Math.round(stemEngagement),
-                    sportsInterest: Math.round(sportsEngagement)
-                };
-                
-                datasets.push({
-                    label: cohort,
-                    data: dataPoint,
-                    borderColor: colors[index % colors.length],
-                    backgroundColor: colors[index % colors.length].replace(')', ', 0.1)').replace('rgb', 'rgba'),
-                    borderWidth: 2,
-                    pointBackgroundColor: colors[index % colors.length]
-                });
-            });
-            
-            return {
-                chartData: {
-                    labels: ['Math Gains', 'CS Gains', 'Attendance', 'Satisfaction', 'STEM Interest', 'Sports Interest'],
-                    datasets: datasets
-                },
-                cohortStats: cohortStats
-            };
+       
+
+function generateRadarData(performanceResults, engagementData) {
+    const cohorts = performanceResults ? performanceResults.cohorts : sampleData.cohorts;
+    const mathGains = performanceResults ? performanceResults.mathGains : sampleData.mathGains;
+    const csGains = performanceResults ? performanceResults.csGains : sampleData.csGains;
+    
+    // Use RGBA colors for proper transparency
+    const colors = [
+        { border: '#3b82f6', background: 'rgba(59, 130, 246, 0.15)' },
+        { border: '#10b981', background: 'rgba(16, 185, 129, 0.15)' },
+        { border: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)' },
+        { border: '#ec4899', background: 'rgba(236, 72, 153, 0.15)' }
+    ];
+    
+    const datasets = [];
+    const cohortStats = {};
+    
+    cohorts.forEach((cohort, index) => {
+        // Calculate engagement scores for this cohort
+        let stemEngagement = 75; // default
+        let sportsEngagement = 80; // default
+        let attendanceScore = 80; // default
+        
+        if (engagementData && engagementData[cohort]) {
+            const cohortData = engagementData[cohort];
+            stemEngagement = (cohortData.reduce((sum, d) => sum + d.stemScore, 0) / cohortData.length) * 25;
+            sportsEngagement = (cohortData.reduce((sum, d) => sum + d.sportsScore, 0) / cohortData.length) * 25;
+            attendanceScore = (cohortData.reduce((sum, d) => sum + d.overallScore, 0) / cohortData.length) * 25;
         }
+        
+        const dataPoint = [
+            mathGains[index] || 0,
+            csGains[index] || 0,
+            attendanceScore,
+            95, // satisfaction (default)
+            stemEngagement,
+            sportsEngagement
+        ];
+        
+        cohortStats[cohort] = {
+            math: mathGains[index] || 0,
+            cs: csGains[index] || 0,
+            stemInterest: Math.round(stemEngagement),
+            sportsInterest: Math.round(sportsEngagement)
+        };
+        
+        const colorSet = colors[index % colors.length];
+        
+        datasets.push({
+            label: cohort,
+            data: dataPoint,
+            borderColor: colorSet.border,
+            backgroundColor: colorSet.background,  // Now properly transparent
+            borderWidth: 2,
+            pointBackgroundColor: colorSet.border,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4
+        });
+    });
+    
+    return {
+        chartData: {
+            labels: ['Math Gains', 'CS Gains', 'Attendance', 'Satisfaction', 'STEM Interest', 'Sports Interest'],
+            datasets: datasets
+        },
+        cohortStats: cohortStats
+    };
+}
 
         function updateCohortCards(cohortStats) {
             const container = document.querySelector('.analytics-card:last-child .grid');
