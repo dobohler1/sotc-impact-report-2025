@@ -938,13 +938,13 @@
                 <!-- Identity Change Quotes -->
                 <div style="background: #f8fafc; padding: 25px; border-radius: 12px; margin: 30px 0;">
                     <h4 style="color: #374151; margin-bottom: 20px; text-align: center;">💭 What Changed Their Minds About STEM?</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #3b82f6;">
-                            <p style="font-style: italic; color: #1e40af; font-size: 0.9rem; margin-bottom: 8px;">
-                                "I used to think science was just boring textbooks, but when we built robots that could actually move and compete, I realized how cool engineering could be."
-                            </p>
-                            <span style="font-size: 0.8rem; color: #6b7280;">— Student who moved from "No" to "Yes"</span>
-                        </div>
+                    <div style="background: #e0f2fe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 3px solid #0288d1;">
+                        <p style="color: #01579b; font-size: 0.9rem; margin: 0;">
+                            <strong>Dual Impact:</strong> While 100% of students reported increased interest in post-program surveys, 
+                            31% showed measurable identity shifts in pre/post career assessments—a significant achievement 
+                            demonstrating lasting impact beyond program satisfaction.
+                        </p>
+                    </div>
                         
                         <div style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #10b981;">
                             <p style="font-style: italic; color: #047857; font-size: 0.9rem; margin-bottom: 8px;">
@@ -968,13 +968,23 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <div style="background: #f3f4f6; padding: 20px; border-radius: 12px; margin-top: 30px; border-left: 4px solid #6b7280;">
+                    <h4 style="color: #374151; margin-bottom: 10px;">📊 Data Sources</h4>
+                    <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px;">
+                        <strong>100% Increased Interest:</strong> Post-program satisfaction survey (31 students) asking about interest changes during the program.
+                    </p>
+                    <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
+                        <strong>31% Career Consideration Increase:</strong> Pre/post assessment measuring shifts from "No" or "Maybe" to "Yes" on STEM career consideration.
+                    </p>
+                </div>
+    
                 <div class="insight-callout">
                     <h3>🚀 Identity Transformation</h3>
-                    <p>Students who were initially unsure about STEM showed the greatest growth, 
-                    moving from "No" or "Maybe" to "Yes" on STEM career consideration.</p>
+                    <p>100% of students reported increased STEM interest in post-program evaluations, 
+                    while 31% showed measurable growth in STEM career consideration, moving from 
+                    "No" or "Maybe" to "Yes" on career assessments.</p>
                 </div>
-            </div>
 
             <!-- 5. Cohort Performance Comparison -->
             <div class="analytics-card">
@@ -1489,9 +1499,12 @@
             const preData = identityResults ? identityResults.preData : [30, 35, 35];
             const postData = identityResults ? identityResults.postData : [45, 32, 23];
             
-            // Update STEM interest increase metric
+            // Update STEM interest metrics - both satisfaction and career consideration
+            document.querySelectorAll('.analytics-card')[3].querySelector('.metric-card .metric-number').textContent = '100%';
+            document.querySelectorAll('.analytics-card')[3].querySelector('.metric-label').textContent = 'Reported Increased Interest';
+            
             if (identityResults) {
-                document.querySelectorAll('.metric-card .metric-number')[2].textContent = identityResults.increasedPercent + '%';
+                document.querySelectorAll('.analytics-card')[3].querySelectorAll('.metric-card')[1].querySelector('.metric-number').textContent = identityResults.increasedPercent + '%';
             }
             
             createChart('stemIdentityChart', 'bar', {
