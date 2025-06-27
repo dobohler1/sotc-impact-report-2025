@@ -1042,10 +1042,18 @@
         let charts = {};
 
         // Sample fallback data
+        // Hardcoded performance data
+        const performanceData = {
+            cohorts: ['John Muir Fall 24', 'Bancroft Fall 24', 'John Muir Spring 25', 'Bancroft Spring 25'],
+            mathGains: [29, 8, 26, 13],
+            csGains: [14, 12, 28, 15],
+        };
+        
+        // Sample fallback data for other metrics
         const sampleData = {
             cohorts: ['John Muir Fall 24', 'Bancroft Fall 24', 'John Muir Spring 25', 'Bancroft Spring 25'],
-            mathGains: [15.2, 45.4, 19.8, 42.3],
-            csGains: [52.1, 35.8, 89.3, 69.0],
+            mathGains: [29, 8, 26, 13],
+            csGains: [14, 12, 28, 15],
             attendanceData: {
                 'all': [18, 8, 9, 26, 39],
                 'John Muir Fall 24': [20, 8, 0, 8, 64],
@@ -1407,20 +1415,21 @@
             renderAllCharts();
         }
 
+       
         function renderAllCharts() {
-        // 1. Performance Gains Chart - using hardcoded data
-        createChart('performanceChart', 'bar', {
-            labels: performanceData.cohorts,
-            datasets: [
-                {
-                    label: 'Math Improvement (%)',
-                    data: performanceData.mathGains,
+            // 1. Performance Gains Chart - using hardcoded data
+            createChart('performanceChart', 'bar', {
+                labels: performanceData.cohorts,
+                datasets: [
+                    {
+                        label: 'Math Improvement (%)',
+                        data: performanceData.mathGains,
                         backgroundColor: '#3b82f6',
                         borderRadius: 8
                     },
                     {
                         label: 'Computer Science Improvement (%)',
-                        data: perfData.csGains,
+                        data: performanceData.csGains,
                         backgroundColor: '#10b981',
                         borderRadius: 8
                     }
@@ -1515,8 +1524,8 @@
                 }
             });
 
-            // 5. Cohort Comparison Radar Chart - All 4 Cohorts
-            const radarData = generateRadarData(performanceResults, programData.engagement);
+             // 5. Cohort Comparison Radar Chart - All 4 Cohorts
+            const radarData = generateRadarData(null, programData.engagement);
             
             createChart('cohortChart', 'radar', radarData.chartData, {
                 scales: {
@@ -1543,12 +1552,12 @@
             updateCohortCards(radarData.cohortStats);
         }
 
-       
+    function generateRadarData(performanceResults, engagementData) {
+    const cohorts = performanceData.cohorts;
+    const mathGains = performanceData.mathGains;
+    const csGains = performanceData.csGains;
 
-function generateRadarData(performanceResults, engagementData) {
-    const cohorts = performanceResults ? performanceResults.cohorts : sampleData.cohorts;
-    const mathGains = performanceResults ? performanceResults.mathGains : sampleData.mathGains;
-    const csGains = performanceResults ? performanceResults.csGains : sampleData.csGains;
+
     
     // Use RGBA colors for proper transparency
     const colors = [
