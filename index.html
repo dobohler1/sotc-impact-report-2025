@@ -1408,16 +1408,13 @@
         }
 
         function renderAllCharts() {
-            // 1. Performance Gains Chart
-            const performanceResults = processPerformanceData(programData.performance);
-            const perfData = performanceResults || sampleData;
-            
-            createChart('performanceChart', 'bar', {
-                labels: perfData.cohorts,
-                datasets: [
-                    {
-                        label: 'Math Improvement (%)',
-                        data: perfData.mathGains,
+        // 1. Performance Gains Chart - using hardcoded data
+        createChart('performanceChart', 'bar', {
+            labels: performanceData.cohorts,
+            datasets: [
+                {
+                    label: 'Math Improvement (%)',
+                    data: performanceData.mathGains,
                         backgroundColor: '#3b82f6',
                         borderRadius: 8
                     },
