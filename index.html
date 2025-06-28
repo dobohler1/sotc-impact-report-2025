@@ -984,52 +984,51 @@
                 <div class="chart-container">
                     <canvas id="cohortChart"></canvas>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0;">
-                    <div style="background: #eff6ff; padding: 15px; border-radius: 8px; text-align: center;">
-                        <h4 style="color: #1e40af; margin-bottom: 8px;">John Muir Fall 24</h4>
-                        <div style="font-size: 0.85rem; color: #3730a3;">
-                            <div>Math: +15.2%</div>
-                            <div>CS: +52.1%</div>
-                            <div>STEM Interest: 25%</div>
-                            <div>Sports Interest: 78%</div>
-                        </div>
+                <div style="background: #eff6ff; padding: 15px; border-radius: 8px; text-align: center;">
+                    <h4 style="color: #1e40af; margin-bottom: 8px;">John Muir Fall 24</h4>
+                    <div style="font-size: 0.85rem; color: #3730a3;">
+                        <div>Math: +26%</div>
+                        <div>CS: +14%</div>
+                        <div>STEM Interest: 25%</div>
+                        <div>Sports Interest: 78%</div>
                     </div>
-                    
-                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; text-align: center;">
-                        <h4 style="color: #047857; margin-bottom: 8px;">Bancroft Fall 24</h4>
-                        <div style="font-size: 0.85rem; color: #065f46;">
-                            <div>Math: +45.4%</div>
-                            <div>CS: +35.8%</div>
-                            <div>STEM Interest: 30%</div>
-                            <div>Sports Interest: 85%</div>
-                        </div>
+                </div>
+                
+                <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; text-align: center;">
+                    <h4 style="color: #047857; margin-bottom: 8px;">Bancroft Fall 24</h4>
+                    <div style="font-size: 0.85rem; color: #065f46;">
+                        <div>Math: +13%</div>
+                        <div>CS: +15%</div>
+                        <div>STEM Interest: 30%</div>
+                        <div>Sports Interest: 85%</div>
                     </div>
-                    
-                    <div style="background: #fefce8; padding: 15px; border-radius: 8px; text-align: center;">
-                        <h4 style="color: #a16207; margin-bottom: 8px;">John Muir Spring 25</h4>
-                        <div style="font-size: 0.85rem; color: #92400e;">
-                            <div>Math: +19.8%</div>
-                            <div>CS: +89.3%</div>
-                            <div>STEM Interest: 40%</div>
-                            <div>Sports Interest: 72%</div>
-                        </div>
+                </div>
+                
+                <div style="background: #fefce8; padding: 15px; border-radius: 8px; text-align: center;">
+                    <h4 style="color: #a16207; margin-bottom: 8px;">John Muir Spring 25</h4>
+                    <div style="font-size: 0.85rem; color: #92400e;">
+                        <div>Math: +28%</div>
+                        <div>CS: +28%</div>
+                        <div>STEM Interest: 40%</div>
+                        <div>Sports Interest: 72%</div>
                     </div>
-                    
-                    <div style="background: #fdf2f8; padding: 15px; border-radius: 8px; text-align: center;">
-                        <h4 style="color: #be185d; margin-bottom: 8px;">Bancroft Spring 25</h4>
-                        <div style="font-size: 0.85rem; color: #9d174d;">
-                            <div>Math: +42.3%</div>
-                            <div>CS: +69.0%</div>
-                            <div>STEM Interest: 35%</div>
-                            <div>Sports Interest: 80%</div>
-                        </div>
+                </div>
+                
+                <div style="background: #fdf2f8; padding: 15px; border-radius: 8px; text-align: center;">
+                    <h4 style="color: #be185d; margin-bottom: 8px;">Bancroft Spring 25</h4>
+                    <div style="font-size: 0.85rem; color: #9d174d;">
+                        <div>Math: +9%</div>
+                        <div>CS: +11%</div>
+                        <div>STEM Interest: 35%</div>
+                        <div>Sports Interest: 80%</div>
                     </div>
+                </div>
                 </div>
                 <div class="insight-callout">
                     <h3>📈 Consistent Excellence</h3>
                     <p>All cohorts exceeded baseline performance, with John Muir Spring 25 leading in 
-                    Computer Science gains (+89.3%) and Bancroft Fall 24 excelling in Math (+45.4%). 
-                    Sports interest remained consistently high across all cohorts.</p>
+                    both Math and Computer Science gains (+28% each). John Muir Fall 24 also showed 
+                    strong Math improvement (+26%). Sports interest remained consistently high across all cohorts.</p>
                 </div>
             </div>
 
@@ -1050,15 +1049,15 @@
         // Hardcoded performance data
         const performanceData = {
             cohorts: ['John Muir Fall 24', 'Bancroft Fall 24', 'John Muir Spring 25', 'Bancroft Spring 25'],
-            mathGains: [29, 8, 26, 13],
-            csGains: [14, 12, 28, 15],
+            mathGains: [26, 13, 28, 9],
+            csGains: [14, 15, 28, 11],
         };
         
         // Sample fallback data for other metrics
         const sampleData = {
             cohorts: ['John Muir Fall 24', 'Bancroft Fall 24', 'John Muir Spring 25', 'Bancroft Spring 25'],
-            mathGains: [29, 8, 26, 13],
-            csGains: [14, 12, 28, 15],
+            mathGains: [26, 13, 28, 9],
+            csGains: [14, 15, 28, 11],
                attendanceData: {
                 'all': [9, 12, 13, 13, 54],
                 'John Muir Spring 25': [12, 6, 6, 12, 65],
