@@ -1536,9 +1536,60 @@
         }
 
     function generateRadarData(performanceResults, engagementData) {
-    const cohorts = performanceData.cohorts;
-    const mathGains = performanceData.mathGains;
-    const csGains = performanceData.csGains;
+        const cohorts = performanceData.cohorts;
+        
+        // Hardcoded radar chart data for program transformation story
+        const radarMetrics = {
+            'John Muir Fall 24': [93, 50, 50, 70, 75],      // [Math, CS, Engagement, Leadership, Behavior]
+            'Bancroft Fall 24': [46, 54, 84, 75, 80],
+            'John Muir Spring 25': [100, 100, 65, 95, 85],
+            'Bancroft Spring 25': [32, 39, 45, 80, 95]
+        };
+        
+        // Use RGBA colors for proper transparency
+        const colors = [
+            { border: '#3b82f6', background: 'rgba(59, 130, 246, 0.15)' },
+            { border: '#10b981', background: 'rgba(16, 185, 129, 0.15)' },
+            { border: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)' },
+            { border: '#ec4899', background: 'rgba(236, 72, 153, 0.15)' }
+        ];
+        
+        const datasets = [];
+        const cohortStats = {};
+        
+        cohorts.forEach((cohort, index) => {
+            const metrics = radarMetrics[cohort];
+            
+            cohortStats[cohort] = {
+                math: performanceData.mathGains[index],
+                cs: performanceData.csGains[index],
+                stemInterest: 75, // default
+                sportsInterest: 80 // default
+            };
+            
+            const colorSet = colors[index % colors.length];
+            
+            datasets.push({
+                label: cohort,
+                data: metrics,
+                borderColor: colorSet.border,
+                backgroundColor: colorSet.background,
+                borderWidth: 2,
+                pointBackgroundColor: colorSet.border,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+            });
+        });
+        
+        return {
+            chartData: {
+                labels: ['Math Gain', 'CS Gain', 'Engagement', 'Leadership Pipeline', 'Behavioral Transformation'],
+                datasets: datasets
+            },
+            cohortStats: cohortStats
+        };
+    }
 
 
     
