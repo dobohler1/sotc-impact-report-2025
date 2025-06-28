@@ -1290,41 +1290,9 @@
         }
 
         function updateHeaderStatistics(performanceData, stemIdentityData) {
-           // const statCards = document.querySelectorAll('.stat-card .stat-number');
-            
-           // if (performanceData && statCards.length >= 4) {
-                // Update total students
-             //   statCards[0].textContent = performanceData.length;
-                
-                // Calculate average improvements
-               // let totalMathGain = 0, totalCSGain = 0, validMath = 0, validCS = 0;
-                
-                //performanceData.forEach(row => {
-                  //  const mathGain = parseFloat(row['Math Normalized Gain (%)']?.replace('%', '') || 0);
-                    //const csGain = parseFloat(row['Computer  Normalized Gain (%)']?.replace('%', '') || 0);
-                    
-                    //if (!isNaN(mathGain) && mathGain > 0) {
-                      //  totalMathGain += mathGain;
-                        //validMath++;
-                    //}
-                   // if (!isNaN(csGain) && csGain > 0) {
-                     //   totalCSGain += csGain;
-                       // validCS++;
-                    }
-                });
-                
-                //if (validMath > 0) {
-                    statCards[2].textContent = (totalMathGain / validMath).toFixed(1) + '%';
-                }
-                //if (validCS > 0) {
-                    statCards[3].textContent = (totalCSGain / validCS).toFixed(1) + '%';
-                }
-                
-                // Update cohorts count
-              //  const uniqueCohorts = [...new Set(performanceData.map(row => row.Cohort).filter(Boolean))];
-                //statCards[1].textContent = uniqueCohorts.length;
-            }
-        }
+    // Disabled - keeping hardcoded header values
+    console.log('Header statistics update disabled - using hardcoded values');
+}
 
         // Convert engagement scores to attendance tiers
         function engagementToAttendanceTiers(engagementData, cohort = 'all') {
