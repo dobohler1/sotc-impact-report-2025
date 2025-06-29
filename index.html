@@ -24,6 +24,7 @@
             background: white;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
+        
         /* Header Section */
         .header {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
@@ -80,6 +81,7 @@
             display: block;
             margin-bottom: 10px;
         }
+        
         /* Navigation */
         .nav {
             background: #34495e;
@@ -133,6 +135,212 @@
             background: linear-gradient(135deg, #3498db, #9b59b6);
             margin: 20px auto;
             border-radius: 2px;
+        }
+        
+        /* Story Section */
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-top: 40px;
+        }
+        .story-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .story-image {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .story-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* Video Section */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .video-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+        .video-content {
+            padding: 20px;
+        }
+        .video-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        /* Enhanced Guest Speakers Styles */
+        .speakers-section {
+            position: relative;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            overflow: hidden;
+        }
+        .speakers-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="speakers-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="%23cbd5e1" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23speakers-grid)"/></svg>');
+            opacity: 0.5;
+        }
+        .speakers-container {
+            position: relative;
+            z-index: 1;
+        }
+        .speakers-title {
+            color: #1a202c;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .speakers-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .speaker-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        .speaker-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        .speaker-image-container {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+        }
+        .speaker-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            transition: transform 0.6s ease;
+            filter: brightness(1.1) contrast(1.1);
+        }
+        .speaker-card:hover .speaker-photo {
+            transform: scale(1.1);
+        }
+        .speaker-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.6) 0%, transparent 50%);
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .speaker-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .speaker-content {
+            padding: 30px;
+        }
+        .speaker-header {
+            margin-bottom: 15px;
+        }
+        .speaker-name {
+            font-size: 1.5rem;
+            color: #1a202c;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        .speaker-expertise {
+            font-size: 1rem;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .speaker-credentials {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        .speaker-bio {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        .speaker-bio em {
+            color: #2d3748;
+            font-weight: 600;
+        }
+        .speaker-quote {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            position: relative;
+            margin-top: auto;
+        }
+        .quote-icon {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            font-size: 3rem;
+            color: #667eea;
+            opacity: 0.3;
+            font-family: Georgia, serif;
+        }
+        .speaker-quote p {
+            font-style: italic;
+            color: #2d3748;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+            padding-left: 20px;
         }
         
         /* Analytics Section Styles */
@@ -245,7 +453,75 @@
             font-size: 0.9rem;
         }
 
+        /* Key Findings */
+        .findings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .finding-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-top: 4px solid #3498db;
+        }
+        .finding-card:nth-child(2) { border-top-color: #e74c3c; }
+        .finding-card:nth-child(3) { border-top-color: #2ecc71; }
+        .finding-card:nth-child(4) { border-top-color: #f39c12; }
+        .finding-card:hover {
+            transform: translateY(-5px);
+        }
+        .finding-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .finding-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        /* Photo Gallery */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .photo-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .photo-item:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         /* Responsive Design */
+        @media (max-width: 1024px) {
+            .speakers-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
         @media (max-width: 768px) {
             .header {
                 padding: 40px 20px;
@@ -256,17 +532,37 @@
             .section {
                 padding: 40px 20px;
             }
+            .story-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
             .nav-list {
                 flex-direction: column;
             }
             .nav-link {
                 text-align: center;
             }
+            .speakers-title {
+                font-size: 2.2rem;
+            }
+            .speakers-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            .speaker-content {
+                padding: 25px;
+            }
+            .speaker-image-container {
+                height: 200px;
+            }
             .chart-container {
                 height: 300px;
             }
         }
         @media (max-width: 480px) {
+            .speaker-content {
+                padding: 20px;
+            }
             .analytics-card {
                 padding: 20px;
             }
@@ -306,9 +602,216 @@
         <!-- Navigation -->
         <nav class="nav">
             <ul class="nav-list">
+                <li class="nav-item"><a href="#story" class="nav-link">Program Story</a></li>
+                <li class="nav-item"><a href="#videos" class="nav-link">Student Voices</a></li>
+                <li class="nav-item"><a href="#speakers" class="nav-link">Guest Speakers</a></li>
                 <li class="nav-item"><a href="#analytics" class="nav-link">Program Impact & Analytics</a></li>
+                <li class="nav-item"><a href="#findings" class="nav-link">Key Findings</a></li>
+                <li class="nav-item"><a href="#gallery" class="nav-link">Photo Gallery</a></li>
             </ul>
         </nav>
+
+        <!-- Program Story Section -->
+        <section id="story" class="section">
+            <h2 class="section-title">Our STEM Journey</h2>
+            <div class="story-grid">
+                <div class="story-text">
+                    <p>
+                        This year, Science on the Court (SOTC) deepened its impact through a dynamic partnership 
+                        with the Boys and Girls Club of San Leandro, serving students at Bancroft and John Muir 
+                        Middle Schools. Our program blended basketball training, STEM learning, and mentorship to
+                        engage middle schoolers both on and off the court.
+                    </p>
+                    <br>
+                    <p>
+                        Students didn't just shoot hoops—they built and programmed robots, explored real-world
+                        physics, and applied math through the lens of sports. A major highlight was our field trip to
+                        Tesla, where students witnessed innovation firsthand and imagined their place in the future of
+                        technology.
+                    </p>
+                </div>
+                <div class="story-image">
+                    <img src="photos/parker.jpg" alt="Students working on STEM projects" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Student Videos Section -->
+        <section id="videos" class="section">
+            <h2 class="section-title">Student Voices & Success Stories</h2>
+            <div class="video-grid">
+        
+                <!-- Student Testimonials -->
+                <div class="video-card" style="overflow: hidden;">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/K4zPl0Tw-Es?rel=0&modestbranding=1"
+                        title="Student Testimonials"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        style="border: none;">
+                    </iframe>
+                    <div class="video-content">
+                        <h3 class="video-title">Student Testimonials</h3>
+                        <p>Hear from students about their STEM program experience and how it's changed their perspective on learning.</p>
+                    </div>
+                </div>
+        
+                <!-- Final Showcase -->
+                <div class="video-card" style="overflow: hidden;">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/g1XWqc5qHBs?rel=0&modestbranding=1"
+                        title="Final Showcase"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        style="border: none;">
+                    </iframe>
+                    <div class="video-content">
+                        <h3 class="video-title">Final Showcase</h3>
+                        <p>Check out students shooting hoops, building robots, and competing for prizes.</p>
+                    </div>
+                </div>
+        
+                <!-- Community Voices -->
+                <div class="video-card" style="overflow: hidden;">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/BoICs9svPu4?rel=0&modestbranding=1"
+                        title="Voices of Impact"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        style="border: none;">
+                    </iframe>
+                    <div class="video-content">
+                        <h3 class="video-title">Voices of Impact</h3>
+                        <p>Hear from the SLUSD Expanded Learning Director, John Muir's Principal, and a Boys & Girls Club Program Manager on how SOTC is making a difference.</p>
+                    </div>
+                </div>
+        
+            </div>
+        </section>
+
+        <!-- Guest Speakers Section -->
+        <section id="speakers" class="section speakers-section">
+            <div class="speakers-background"></div>
+            <div class="speakers-container">
+                <h2 class="section-title speakers-title">Guest Speakers & Industry Experts</h2>
+                <p class="speakers-subtitle">
+                    World-class professionals who inspired our students with real-world STEM applications and life wisdom
+                </p>
+                
+                <div class="speakers-grid">
+                    
+                    <div class="speaker-card">
+                        <div class="speaker-image-container">
+                            <img src="photos/hakeem_oluseyi.JPEG" alt="Dr. Hakeem Oluseyi" class="speaker-photo">
+                            <div class="speaker-overlay">
+                                <div class="speaker-badge">Keynote Speaker</div>
+                            </div>
+                        </div>
+                        <div class="speaker-content">
+                            <div class="speaker-header">
+                                <h3 class="speaker-name">Dr. Hakeem Oluseyi</h3>
+                                <div class="speaker-expertise">🌟 Astrophysicist</div>
+                            </div>
+                            <p class="speaker-credentials">
+                                President, National Society of Black Physicists • CEO, Astronomical Society of the Pacific
+                            </p>
+                            <p class="speaker-bio">
+                                Author of <em>A Quantum Life: My Unlikely Journey from the Street to the Stars</em>, Dr. Oluseyi 
+                                showed students how the curiosity-driven mindset of astrophysics parallels athletic performance—reading 
+                                plays on the court is like mapping the cosmos.
+                            </p>
+                            <div class="speaker-quote">
+                                <div class="quote-icon">"</div>
+                                <p>When I'm tracking a photon crossing galaxies or anticipating a teammate's move mid‑court, 
+                                I'm using the same scientific toolkit—observe closely, predict outcomes, adjust in real time.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="speaker-card">
+                        <div class="speaker-image-container">
+                            <img src="photos/james-allen.JPEG" alt="Dr. James Allen" class="speaker-photo">
+                            <div class="speaker-overlay">
+                                <div class="speaker-badge">Research Scientist</div>
+                            </div>
+                        </div>
+                        <div class="speaker-content">
+                            <div class="speaker-header">
+                                <h3 class="speaker-name">Dr. James Allen</h3>
+                                <div class="speaker-expertise">⚛️ Accelerator Physics</div>
+                            </div>
+                            <p class="speaker-credentials">
+                                Stanford PhD • Former Varsity Basketball Player • Varian Research Scientist
+                            </p>
+                            <p class="speaker-bio">
+                                A living example that you can excel in both athletics and academia, Dr. Allen broke down how 
+                                particle accelerators help treat cancer and how court discipline translates to research success.
+                            </p>
+                            <div class="speaker-quote">
+                                <div class="quote-icon">"</div>
+                                <p>I wanted students to see that you can be both an athlete and a scientist. The same focus 
+                                that helps you train can help you thrive in college and beyond.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="speaker-card">
+                        <div class="speaker-image-container">
+                            <img src="photos/jareem-gunter.JPEG" alt="Jareem Gunter" class="speaker-photo">
+                            <div class="speaker-overlay">
+                                <div class="speaker-badge">2025 Coach of the Year</div>
+                            </div>
+                        </div>
+                        <div class="speaker-content">
+                            <div class="speaker-header">
+                                <h3 class="speaker-name">Jareem Gunter</h3>
+                                <div class="speaker-expertise">🏀 Leadership Coach</div>
+                            </div>
+                            <p class="speaker-credentials">
+                                Author of <em>The Man Book</em> • Positive Coaching Alliance 2025 Coach of the Year • Dream Team AAU
+                            </p>
+                            <p class="speaker-bio">
+                                Led a transformative workshop on evaluating relationships and personal influences, helping students 
+                                reflect on whether their circle supports their goals and ambitions.
+                            </p>
+                            <div class="speaker-quote">
+                                <div class="quote-icon">"</div>
+                                <p>Your circle shapes your future. I showed students how to check if their relationships 
+                                are building them up or holding them back.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="speaker-card">
+                        <div class="speaker-image-container">
+                            <img src="photos/phil-robinson.JPEG" alt="Phil Robinson" class="speaker-photo">
+                            <div class="speaker-overlay">
+                                <div class="speaker-badge">Creative Mentor</div>
+                            </div>
+                        </div>
+                        <div class="speaker-content">
+                            <div class="speaker-header">
+                                <h3 class="speaker-name">Phil Robinson</h3>
+                                <div class="speaker-expertise">🎬 Filmmaker & Referee</div>
+                            </div>
+                            <p class="speaker-credentials">
+                                Morehouse Graduate • Creative Storyteller • STEM Enthusiast
+                            </p>
+                            <p class="speaker-bio">
+                                As both guest instructor and referee, Phil encouraged students to pursue excellence while staying 
+                                creative, having fun, and making a positive impact in their community.
+                            </p>
+                            <div class="speaker-quote">
+                                <div class="quote-icon">"</div>
+                                <p>Curiosity is your superpower. The more you explore, the more you'll discover who you 
+                                really are—and what you're capable of.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+        </section>
 
         <!-- Program Impact & Analytics Section -->
         <section id="analytics" class="section analytics-section">
@@ -391,6 +894,15 @@
                         <div class="tier-description">Lower engagement (≤25% attendance)</div>
                     </div>
                 </div>
+                <div style="background: #f3f4f6; padding: 20px; border-radius: 12px; margin-top: 30px; border-left: 4px solid #6b7280;">
+                    <h4 style="color: #374151; margin-bottom: 10px;">📝 Attendance Context</h4>
+                    <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px;">
+                        <strong>Tier 1 students (≤25% attendance)</strong> typically attended only 1-2 sessions, not giving the program a fair opportunity to demonstrate its value. This limited exposure prevents meaningful skill development and relationship building with instructors.
+                    </p>
+                    <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
+                        <strong>Note on Bancroft Spring 25:</strong> We experienced temporary enrollment decline due to competition from a popular wrestling class. However, students returned once wrestling concluded, demonstrating continued interest in our program.
+                    </p>
+                </div>
             </div>
 
             <!-- 3. Student Satisfaction -->
@@ -409,6 +921,38 @@
                 <div class="chart-container">
                     <canvas id="satisfactionChart"></canvas>
                 </div>
+                
+                <!-- Student Voice Quotes -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background: #f0f9ff; padding: 20px; border-radius: 12px; border-left: 4px solid #3b82f6;">
+                        <p style="font-style: italic; color: #1e40af; margin-bottom: 10px;">
+                            "I loved how we got to build robots and play basketball at the same time. It made learning science so much more fun!"
+                        </p>
+                        <span style="font-size: 0.85rem; color: #6b7280;">— 7th Grade Student</span>
+                    </div>
+                    
+                    <div style="background: #f0fdf4; padding: 20px; border-radius: 12px; border-left: 4px solid #10b981;">
+                        <p style="font-style: italic; color: #047857; margin-bottom: 10px;">
+                            "The balance between classroom and basketball was perfect. We learned about physics while practicing shots!"
+                        </p>
+                        <span style="font-size: 0.85rem; color: #6b7280;">— 6th Grade Student</span>
+                    </div>
+                    
+                    <div style="background: #fefce8; padding: 20px; border-radius: 12px; border-left: 4px solid #eab308;">
+                        <p style="font-style: italic; color: #a16207; margin-bottom: 10px;">
+                            "I never thought I could be good at coding, but building robots that could race was amazing. Now I want to learn more!"
+                        </p>
+                        <span style="font-size: 0.85rem; color: #6b7280;">— 6th Grade Student</span>
+                    </div>
+                    
+                    <div style="background: #fdf2f8; padding: 20px; border-radius: 12px; border-left: 4px solid #ec4899;">
+                        <p style="font-style: italic; color: #be185d; margin-bottom: 10px;">
+                            "The instructors made everything easy to understand. They connected what we were learning to basketball, which helped me get it."
+                        </p>
+                        <span style="font-size: 0.85rem; color: #6b7280;">— 7th Grade Student</span>
+                    </div>
+                </div>
+                
                 <div class="insight-callout">
                     <h3>💡 Student Voice</h3>
                     <p>"Very enjoyable" was the most common response (84%), with students highlighting 
@@ -436,6 +980,41 @@
                 <div class="chart-container">
                     <canvas id="stemIdentityChart"></canvas>
                 </div>
+                
+                <!-- Identity Change Quotes -->
+                <div style="background: #f8fafc; padding: 25px; border-radius: 12px; margin: 30px 0;">
+                    <h4 style="color: #374151; margin-bottom: 20px; text-align: center;">💭 What Changed Their Minds About STEM?</h4>
+                    <div style="background: #e0f2fe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 3px solid #0288d1;">
+                        <p style="color: #01579b; font-size: 0.9rem; margin: 0;">
+                            <strong>Dual Impact:</strong> While 100% of students reported increased interest in post-program surveys, 
+                            31% showed measurable identity shifts in pre/post career assessments—a significant achievement 
+                            demonstrating lasting impact beyond program satisfaction.
+                        </p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #10b981;">
+                            <p style="font-style: italic; color: #047857; font-size: 0.9rem; margin-bottom: 8px;">
+                                "The Tesla field trip showed me that STEM jobs aren't just sitting at a desk. You can build cars that drive themselves!"
+                            </p>
+                            <span style="font-size: 0.8rem; color: #6b7280;">— Student who moved from "Maybe" to "Yes"</span>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #8b5cf6;">
+                            <p style="font-style: italic; color: #7c3aed; font-size: 0.9rem; margin-bottom: 8px;">
+                                "Learning about physics through basketball made everything click. Now I want to study how things move and work."
+                            </p>
+                            <span style="font-size: 0.8rem; color: #6b7280;">— Student who moved from "No" to "Maybe"</span>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #f59e0b;">
+                            <p style="font-style: italic; color: #d97706; font-size: 0.9rem; margin-bottom: 8px;">
+                                "Programming the robots to do what I wanted was like solving puzzles. It was way more fun than I thought coding would be."
+                            </p>
+                            <span style="font-size: 0.8rem; color: #6b7280;">— Student considering computer science career</span>
+                        </div>
+                    </div>
+                </div>
+            
                 <div class="insight-callout">
                     <h3>🚀 Identity Transformation</h3>
                     <p>100% of students reported increased STEM interest in post-program evaluations, 
@@ -461,6 +1040,79 @@
                 </div>
             </div>
         </section>
+
+        <!-- Key Findings Section -->
+        <section id="findings" class="section">
+            <h2 class="section-title">Key Program Findings</h2>
+            <div class="findings-grid">
+                <div class="finding-card">
+                    <div class="finding-icon">📈</div>
+                    <h3 class="finding-title">Consistent Growth</h3>
+                    <p>All cohorts showed measurable improvement in both math and computer science assessments, with average gains exceeding 15%.</p>
+                </div>
+                <div class="finding-card">
+                    <div class="finding-icon">🎯</div>
+                    <h3 class="finding-title">Engagement Success</h3>
+                    <p>High attendance rates and positive student feedback indicate strong program engagement across all participating schools.</p>
+                </div>
+                <div class="finding-card">
+                    <div class="finding-icon">🤝</div>
+                    <h3 class="finding-title">Cross-Cohort Learning</h3>
+                    <p>Students participating in multiple cohorts showed enhanced learning outcomes and peer mentorship capabilities.</p>
+                </div>
+                <div class="finding-card">
+                    <div class="finding-icon">🔬</div>
+                    <h3 class="finding-title">Skills Transfer</h3>
+                    <p>Improvements in computational thinking translated to enhanced problem-solving abilities across STEM disciplines.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Photo Gallery Section -->
+        <section id="gallery" class="section">
+            <h2 class="section-title">Program in Action</h2>
+            <div class="photo-gallery">
+        
+                <div class="photo-item">
+                    <img src="photos/ClassEngagement.JPG" alt="Classroom Engagement" style="width: 100%; height: auto;">
+                </div>
+        
+                <div class="photo-item">
+                    <img src="photos/oncourt2.JPG" alt="Student Practicing Jumpshot" style="width: 100%; height: auto;">
+                </div>
+        
+                <div class="photo-item">
+                    <img src="photos/prizes.JPG" alt="Students Receiving Prizes" style="width: 100%; height: auto;">
+                </div>
+        
+                <div class="photo-item">
+                    <img src="photos/racingrobot.JPG" alt="Students Racing Robots" style="width: 100%; height: auto;">
+                </div>
+        
+                <div class="photo-item">
+                    <img src="photos/inclass.JPG" alt="Students Learning in Class" style="width: 100%; height: auto;">
+                </div>
+        
+                <div class="photo-item">
+                    <img src="photos/oncourt.JPG" alt="Basketball Court Activities" style="width: 100%; height: auto;">
+                </div>
+        
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <h3 style="margin-bottom: 20px;">San Leandro Unified School District</h3>
+                <p>STEM Program • Academic Year 2024-2025</p>
+                <p style="margin-top: 20px; opacity: 0.8;">
+                    For more information about our STEM initiatives, contact the district office.
+                </p>
+                <p style="margin-top: 30px; font-size: 0.9rem; opacity: 0.6;">
+                    Report generated with interactive data dashboard • Data as of June 2025
+                </p>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -785,11 +1437,50 @@
             }
         }
 
+        // Smooth scrolling for navigation links
+        function initializeNavigation() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add scroll effect to navigation
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('.nav');
+                if (window.scrollY > 100) {
+                    nav.style.backgroundColor = 'rgba(52, 73, 94, 0.95)';
+                    nav.style.backdropFilter = 'blur(10px)';
+                } else {
+                    nav.style.backgroundColor = '#34495e';
+                    nav.style.backdropFilter = 'none';
+                }
+            });
+
+            // Photo gallery click handlers
+            document.querySelectorAll('.photo-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    alert('Photo gallery would open full-size image viewer here');
+                });
+            });
+        }
+
         // Start initialization when DOM is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', checkLibrariesAndInit);
+            document.addEventListener('DOMContentLoaded', () => {
+                checkLibrariesAndInit();
+                initializeNavigation();
+            });
         } else {
             checkLibrariesAndInit();
+            initializeNavigation();
         }
     </script>
 </body>
