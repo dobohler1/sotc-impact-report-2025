@@ -1442,14 +1442,19 @@
 
         // Smooth scrolling for navigation links
         function initializeNavigation() {
-            // Mobile navigation toggle
-            const navToggle = document.getElementById('nav-toggle');
-            const navList = document.getElementById('nav-list');
-            
-            if (navToggle && navList) {
-                navToggle.addEventListener('click', () => {
-                    navList.classList.toggle('active');
-                });
+        // Mobile navigation toggle
+        const navToggle = document.getElementById('nav-toggle');
+        const navList = document.getElementById('nav-list');
+        
+        console.log('navToggle:', navToggle);
+        console.log('navList:', navList);
+        
+        if (navToggle && navList) {
+            navToggle.addEventListener('click', () => {
+                console.log('Hamburger clicked!');
+                navList.classList.toggle('active');
+                console.log('nav-list classes:', navList.className);
+            });
                 
                 // Close menu when clicking on a link
                 document.querySelectorAll('.nav-link').forEach(link => {
