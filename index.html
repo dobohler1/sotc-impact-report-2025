@@ -1344,10 +1344,10 @@
 
             // 5. Cohort Comparison Radar Chart
             const radarMetrics = {
-                'John Muir Fall 24': [93, 50, 50, 70, 75],
-                'Bancroft Fall 24': [46, 54, 84, 75, 80],
-                'John Muir Spring 25': [100, 100, 65, 95, 85],
-                'Bancroft Spring 25': [32, 39, 45, 80, 95]
+                'John Muir Spring 25': [25, 25, 72, 93, 72, 81],  // Math, CS, Engagement, Behavioral, Sports, STEM
+                'John Muir Fall 24': [26, 14, 86, 95, 72, 79],    // Math, CS, Engagement, Behavioral, Sports, STEM
+                'Bancroft Spring 25': [9, 11, 51, 84, 87, 72],    // Math, CS, Engagement, Behavioral, Sports, STEM
+                'Bancroft Fall 24': [13, 15, 66, 86, 88, 80]      // Math, CS, Engagement, Behavioral, Sports, STEM
             };
             
             const colors = [
@@ -1376,8 +1376,8 @@
             });
             
             createChart('cohortChart', 'radar', {
-                labels: ['Math Gain', 'CS Gain', 'Engagement', 'Leadership Pipeline', 'Behavioral Transformation'],
-                datasets: datasets
+            labels: ['Math Gains', 'CS Gains', 'Engagement', 'Behavioral Transformation', 'Sports Interest', 'STEM Interest'],
+                                datasets: datasets
             }, {
                 scales: {
                     r: {
