@@ -1241,7 +1241,14 @@
         // Main function to render all charts
         function renderAllCharts() {
             console.log('Starting to render charts...');
+            // Debug: Check if canvas elements exist
+            console.log('performanceChart element:', document.getElementById('performanceChart'));
+            console.log('attendanceChart element:', document.getElementById('attendanceChart'));
+            console.log('satisfactionChart element:', document.getElementById('satisfactionChart'));
+            console.log('stemIdentityChart element:', document.getElementById('stemIdentityChart'));
             
+            // Debug: Check if Chart.js is loaded
+            console.log('Chart.js available:', typeof Chart);
             // 1. Performance Gains Chart
             createChart('performanceChart', 'bar', {
                 labels: performanceData.cohorts,
