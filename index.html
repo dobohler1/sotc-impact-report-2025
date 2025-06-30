@@ -1409,18 +1409,6 @@
         function initializeDashboard() {
             console.log('Initializing STEM dashboard...');
             
-            // Show status message
-            const statusMessage = document.querySelector('.analytics-intro');
-            if (statusMessage) {
-                statusMessage.innerHTML = `
-                    <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffeaa7;">
-                        ⚠️ <strong>Using Sample Data:</strong> CSV files not found. Displaying representative data for demonstration.
-                    </div>
-                    Our comprehensive data analysis reveals the transformative impact of the STEM program across 
-                    academic performance, student engagement, and program satisfaction. The following five key 
-                    metrics tell the story of our success and guide our continued improvement.
-                `;
-            }
             
             // Render all charts
             renderAllCharts();
