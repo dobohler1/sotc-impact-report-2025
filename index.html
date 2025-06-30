@@ -1424,25 +1424,6 @@ function initializeNavigation() {
     });
 }
 
-            // Add scroll effect to navigation
-            window.addEventListener('scroll', () => {
-                const nav = document.querySelector('.nav');
-                if (window.scrollY > 100) {
-                    nav.style.backgroundColor = 'rgba(52, 73, 94, 0.95)';
-                    nav.style.backdropFilter = 'blur(10px)';
-                } else {
-                    nav.style.backgroundColor = '#34495e';
-                    nav.style.backdropFilter = 'none';
-                }
-            });
-
-            // Photo gallery click handlers
-            document.querySelectorAll('.photo-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    alert('Photo gallery would open full-size image viewer here');
-                });
-            });
-        }
 
         // Start initialization when DOM is ready
         if (document.readyState === 'loading') {
