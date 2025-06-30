@@ -82,35 +82,51 @@
             margin-bottom: 10px;
         }
         
-        /* Navigation */
-        .nav {
-            background: #34495e;
-            padding: 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav-list {
-            display: flex;
-            list-style: none;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .nav-item {
-            margin: 0;
-        }
-        .nav-link {
-            display: block;
-            padding: 15px 25px;
-            color: white;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            border-bottom: 3px solid transparent;
-        }
-        .nav-link:hover {
-            background-color: #2c3e50;
-            border-bottom-color: #3498db;
-        }
+/* Navigation */
+.nav {
+    background: #34495e;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 15px 0;
+}
+.nav-list {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0;
+}
+.nav-item {
+    margin: 0;
+}
+.nav-link {
+    display: block;
+    padding: 15px 25px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+.nav-link:hover {
+    background-color: #2c3e50;
+    border-bottom-color: #3498db;
+}
         
         /* Section Styles */
         .section {
@@ -536,11 +552,28 @@
                 grid-template-columns: 1fr;
                 gap: 30px;
             }
+            .nav-toggle {
+                display: block;
+            }
             .nav-list {
+                display: none;
                 flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background: #34495e;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+            .nav-list.active {
+                display: flex;
             }
             .nav-link {
                 text-align: center;
+                border-bottom: 1px solid #2c3e50;
+            }
+            .nav-link:hover {
+                border-bottom-color: #3498db;
             }
             .speakers-title {
                 font-size: 2.2rem;
@@ -601,14 +634,17 @@
 
         <!-- Navigation -->
         <nav class="nav">
-            <ul class="nav-list">
-                <li class="nav-item"><a href="#story" class="nav-link">Program Story</a></li>
-                <li class="nav-item"><a href="#videos" class="nav-link">Student Voices</a></li>
-                <li class="nav-item"><a href="#speakers" class="nav-link">Guest Speakers</a></li>
-                <li class="nav-item"><a href="#analytics" class="nav-link">Program Impact & Analytics</a></li>
-                <li class="nav-item"><a href="#findings" class="nav-link">Key Findings</a></li>
-                <li class="nav-item"><a href="#gallery" class="nav-link">Photo Gallery</a></li>
-            </ul>
+            <div class="nav-container">
+                <button class="nav-toggle" id="nav-toggle">☰</button>
+                <ul class="nav-list" id="nav-list">
+                    <li class="nav-item"><a href="#story" class="nav-link">Program Story</a></li>
+                    <li class="nav-item"><a href="#videos" class="nav-link">Student Voices</a></li>
+                    <li class="nav-item"><a href="#speakers" class="nav-link">Guest Speakers</a></li>
+                    <li class="nav-item"><a href="#analytics" class="nav-link">Program Impact & Analytics</a></li>
+                    <li class="nav-item"><a href="#findings" class="nav-link">Key Findings</a></li>
+                    <li class="nav-item"><a href="#gallery" class="nav-link">Photo Gallery</a></li>
+                </ul>
+            </div>
         </nav>
 
         <!-- Program Story Section -->
@@ -1406,6 +1442,23 @@
 
         // Smooth scrolling for navigation links
         function initializeNavigation() {
+            // Mobile navigation toggle
+            const navToggle = document.getElementById('nav-toggle');
+            const navList = document.getElementById('nav-list');
+            
+            if (navToggle && navList) {
+                navToggle.addEventListener('click', () => {
+                    navList.classList.toggle('active');
+                });
+                
+                // Close menu when clicking on a link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navList.classList.remove('active');
+                    });
+                });
+            }
+            
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1418,6 +1471,26 @@
                     }
                 });
             });
+        
+            // Add scroll effect to navigation
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('.nav');
+                if (window.scrollY > 100) {
+                    nav.style.backgroundColor = 'rgba(52, 73, 94, 0.95)';
+                    nav.style.backdropFilter = 'blur(10px)';
+                } else {
+                    nav.style.backgroundColor = '#34495e';
+                    nav.style.backdropFilter = 'none';
+                }
+            });
+        
+            // Photo gallery click handlers
+            document.querySelectorAll('.photo-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    alert('Photo gallery would open full-size image viewer here');
+                });
+            });
+        }
 
             // Add scroll effect to navigation
             window.addEventListener('scroll', () => {
